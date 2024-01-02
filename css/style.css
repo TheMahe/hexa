@@ -86,7 +86,7 @@ nav {
 }
 
 .nav__list li a:hover {
-    color: var(--white-color);
+    color: var(--white);
 }
 
 .container {
@@ -96,35 +96,52 @@ nav {
 }
 
 .hero {
-    position: relative;
+    position: relative  ;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    background: url(../assets/img/bg.png) no-repeat center center/cover;
     height: 100vh;
     
 }
 
-.hero .hero-title {
-    position: relative;
-    z-index: 20;
-}
-
-.hero .hero-title h1 {
-    font-size: 6rem;
-    font-weight: 600;
-    line-height: 1.2;
-    background: var(--text-gradient-white);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    z-index: 20;
+.hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
 
 }
+
+.hero .hero-title  .cta {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
+  
+  .hero .cta-text {
+    display: flex;
+   font-size: 4rem;
+   overflow: hidden;
+    font-weight: 500;
+    z-index: 20;
+  }
+  
+  .hero .cta-text span {
+    padding: 0 0.4rem;
+    
+    text-shadow: rgba(0, 0, 0, 0.4) 0px 0px 20px;
+    display: block; /* we need to change span to displaye:blobk in order to use gsap */
+    z-index: 20;
+  }
  
 
-.hero .hero-title h2 {
+.hero .hero-title .title__second {
     font-size: 2rem;
     font-weight: 500;
     line-height: 1;
@@ -258,6 +275,10 @@ nav {
     padding: 2rem 1rem;
     margin: 1rem;
     width: 20rem;
+    height: 20rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .blog .card h1 {
@@ -282,6 +303,14 @@ nav {
     font-size: .9rem;
     margin-top: 1rem;
     letter-spacing: 1px;
+    transition: .4s all ease-in-out;
+    max-width: fit-content;
+}
+
+.blog .card a:hover {
+    background: var(--text-gradient-orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .notification-svg, .messages-svg {
@@ -327,11 +356,127 @@ footer .row2 .logo img {
 
 footer .row2 .social  {
     display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
 footer .row2 .social svg {
     height: 2rem;
     width: 2rem;
-    color: red;
+}
+
+
+/* Blog page */
+.blog-page {
+    margin-top: 10rem;
+    margin-bottom: 10rem;
+}
+
+.blog-page .blog-title h1 {
+    text-align: center;
+    background: var(--text-gradient-orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 3rem;
+}
+
+.blog-page .blog-title p {
+    font-size: 1rem;
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.section-text {
+    margin-top: 5rem;
+    margin-bottom: 10rem;
+}
+
+.section-text p  {
+    font-size: 4rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+
+article {
+    margin-top: 10rem;
+    margin-bottom: 10rem;
+    color: white;
+}
+
+article .article__header {
+    
+}
+
+article .article__header h1 {
+    text-align: center;
+    background: var(--text-gradient-orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+}
+
+article .article__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+
+}
+
+article .article__header p {
+    font-size: 1rem;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+article .article__content h3 {
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+article .article__content p {
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    margin-bottom: 3rem;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: var(--text-color);
+    margin: 1rem 0;
+}
+
+article .article__content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin-bottom: 3rem;
+}
+
+article .end-text {
+    color: var(--text-color);
+    margin-bottom: 2rem;
+}
+
+article .cta-p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+article .cta-p span {
+    background: var(--text-gradient-orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
 }

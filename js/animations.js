@@ -30,3 +30,61 @@ messages.addEventListener('click', () => {
     tl.fromTo('.note', {y:0, opacity:1}, {y: -40, opacity:0, duration:0.75})
     tl.to('.flap', {scale:1}, "<50%")
 })
+  
+
+
+  //Run animations
+  barba.init({
+    transitions: [{
+      name: 'opacity-transition',
+      leave(data) {
+        // Your leave animation code
+      },
+      enter(data) {
+        window.scrollTo(0, 0);
+        initAnimations();
+      }
+    }]
+  });
+
+function initAnimations() {
+    // Highlight page 2
+const tlH = gsap.timeline({  
+    scrollTrigger: {
+        trigger: '.section-text',
+        scrub: true,
+        start: "-40%",
+        end: "40%",
+    }
+ })
+
+ tlH.fromTo('.highlight', {color: "rgba(255, 255, 255, 0.4)"}, {color: "rgba(255, 255, 255, 1)", stagger: 1})
+
+
+const tlHRemove = gsap.timeline({  
+    scrollTrigger: {
+        trigger: '.section-text',
+        scrub: true,
+        start: "-20%",
+        end: "60%",
+    }
+ });
+
+ tlHRemove.to('.highlight', {color: "rgba(255, 255, 255, 0.4)", stagger: 1}) 
+
+ const tl = gsap.timeline({ defaults: {duration: 0.75, ease: "power3.easeOut" } });
+
+tl.fromTo(".hero-img", { scale: 1.3, borderRadius: "0rem" }, { scale: 1, borderRadius: "2rem", delay: 0.35, duration: 2.5, ease:"elastic.out(1.5,1)" })
+tl.fromTo(".cta1", {x: "100%", color: "#ffc078", opacity: 0}, {x: 0, color: "#fff", opacity: 1}, "<10%")
+tl.fromTo(".cta2", {y: "100%",color: "#ffc078", opacity: 0}, {y: 0,color: "#fff", opacity: 1}, "<10%")
+tl.fromTo(".cta3", {x: "-100%",color: "#ffc078", opacity: 0}, {x: 0,color: "#fff", opacity: 1}, "<10%")
+
+
+
+
+
+
+
+}
+
+initAnimations();
