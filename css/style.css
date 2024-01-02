@@ -480,3 +480,115 @@ article .cta-p span {
     -webkit-text-fill-color: transparent;
     font-weight: 600;
 }
+
+.login-form-wrapper {
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    border-radius: 20px;
+    padding: 4rem;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40rem;
+    z-index: 100; 
+    display: none;
+}
+
+#loginForm h2 {
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+     padding-top: 0;
+}
+
+#loginForm div{
+  padding: 1rem 0;
+}
+
+#loginForm div label{
+  display: block;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: .5rem;
+}
+
+#loginForm div input{
+  height: 4rem;
+  width: 100%;
+  font-size: 18px;
+  padding: 0 .6rem;
+}
+
+
+#loginForm div button {
+    cursor: pointer;
+    padding: .7rem 3rem;
+    font-size: 1.2rem;
+}
+
+.custom-modal {
+    display: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    border-radius: 20px;
+    width: 40rem;
+    margin: auto;
+    padding: 4rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.custom-modal h2 {
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+     padding-top: 0;
+}
+
+.custom-modal div{
+  padding: 1rem 0;
+}
+
+.custom-modal div label{
+  display: block;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: .5rem;
+}
+
+.custom-modal div input{
+  height: 4rem;
+  width: 100%;
+  font-size: 18px;
+  padding: 0 .6rem;
+}
+
+.custom-modal div button {
+    cursor: pointer;
+    padding: .7rem 3rem;
+    font-size: 1.2rem;
+} 
+
+.custom-modal button#closeModal {
+    height: 1.2rem;
+    width: 1.2rem;
+    color: var(--white);
+    background-color: transparent;
+    border: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
