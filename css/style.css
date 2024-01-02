@@ -533,7 +533,8 @@ article .cta-p span {
 
 .custom-modal {
     display: none;
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
     box-shadow: 0 2px 10px #0000001a;
@@ -591,4 +592,12 @@ article .cta-p span {
     position: absolute;
     right: 30px;
     top: 30px;
+}
+
+.custom-modal div form ul {
+    list-style: none;
+}
+
+.custom-modal div ul li {
+    color:  var(--dark-orange);
 }

@@ -22,8 +22,8 @@
                     <li class="nav__item"><a href="#">About</a></li>
                     <li class="nav__item"><a href="#" >Portfolio</a></li>
                     <li class="nav__item"><a href="./blog.html" >Blog</a></li>
-                    <li class="nav__item"><a href="#" >Sign up</a></li>
-                    <li class="nav__item"><a href="#" >Log in</a></li>
+                    <li class="nav__item " id="signup"><a href="#" >Sign up</a></li>
+                    <li class="nav__item" id="login"><a href="#" >Log in</a></li>
                 </ul>
             </div>
         </nav>
@@ -53,7 +53,7 @@
         <button id="closeModal">X</button>
 
         <form action="" id="registrationForm">
-          <h2>Registracija korisnika</h2>
+          <h2>Sign up</h2>
 
           <div>
             <label for="username">username: *</label>
@@ -62,23 +62,23 @@
 
           <div>
             <label for="email">email adress: *</label>
-            <input type="email" id="register_email" name="username" placeholder="john.morgan@gmail.com">
+            <input type="email" id="register_email" name="register_email" placeholder="john.morgan@gmail.com">
           </div>
 
           <div>
             <label for="password">password: *</label>
-            <input type="password" id="password" name="register_password" placeholder="******">
+            <input type="password" id="register_password" name="register_password" placeholder="******">
           </div>
 
           <div>
             <label for="password">Confirm password: *</label>
-            <input type="password" id="password" name="confirm_password" placeholder="******">
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="******">
           </div>
 
           <div>
             <button>Sign up</button>
           </div>
-          
+
         </form>
       </div>
 
@@ -318,5 +318,8 @@
     ></script>
         <script src="https://unpkg.com/@barba/core"></script>
     <script src="./js/animations.js"></script>
+    
+    <script src="./js/Validator.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 </html>

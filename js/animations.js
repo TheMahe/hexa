@@ -83,8 +83,6 @@ tl.fromTo(".cta3", {x: "-100%",color: "#ffc078", opacity: 0}, {x: 0,color: "#fff
 
 
 
-
-
 }
 
 initAnimations();

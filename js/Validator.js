@@ -76,23 +76,39 @@ class Validator {
 	}
 
 	populateErrors(errors) {
-		for(const elem of document.querySelectorAll('ul')) {
-			elem.remove();
-		}
+        // Ensure the form element exists
+        const form = document.querySelector(this.formID);
+        if (!form) {
+            console.error('Form not found for the given formID:', this.formID);
+            return;
+        }
 
-		for(let key of Object.keys(errors)) {
-			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
-			let errorsElement = document.createElement('ul');
-			parentElement.appendChild(errorsElement);
+        // Clear existing errors within the form only
+        const existingErrorLists = form.querySelectorAll('.form-error');
+        existingErrorLists.forEach(elem => elem.remove());
 
-			errors[key].forEach(error => {
-				let li = document.createElement('li');
-				li.innerText = error;
+        Object.keys(errors).forEach(key => {
+            let inputElement = form.querySelector(`input[name="${key}"]`);
+            if (!inputElement) {
+                console.warn('Input element not found for name:', key);
+                return; // Skip this iteration if the input element is not found
+            }
 
-				errorsElement.appendChild(li);
-			});
-		}
-	}
+            let parentElement = inputElement.parentElement;
+            if (errors[key].length > 0) {
+                let errorsElement = document.createElement('ul');
+                errorsElement.classList.add('form-error'); // Add a class to identify these lists
+                parentElement.appendChild(errorsElement);
+
+                errors[key].forEach(error => {
+                    let li = document.createElement('li');
+                    li.innerText = error;
+                    errorsElement.appendChild(li);
+                });
+            }
+        });
+    }
+
 
 	validateEmail(email) {
 		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
