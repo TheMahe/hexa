@@ -495,7 +495,6 @@ article .cta-p span {
     transform: translate(-50%, -50%);
     width: 40rem;
     z-index: 100; 
-    display: none;
 }
 
 #loginForm h2 {
@@ -532,7 +531,6 @@ article .cta-p span {
 }
 
 .custom-modal {
-    display: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
@@ -591,4 +589,16 @@ article .cta-p span {
     position: absolute;
     right: 30px;
     top: 30px;
+}
+
+.custom-modal ul li {
+    color: red;
+}
+
+
+.google-btn {
+   padding: .7rem 3rem;
+    font-size: 1.2rem;
+    background-color: #fff;
+    color: #000;
 }
