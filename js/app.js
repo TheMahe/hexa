@@ -21,6 +21,12 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
         console.error("Firebase auth persistence error:", error);
     });
 
+    function fetchUsername(userId) {
+      return firebase.firestore().collection('users').doc(userId).get().then(userDoc => {
+        return userDoc.exists ? userDoc.data().username : "Unknown User";
+      });
+    }
+
     
 
     document.getElementById('postForm').addEventListener('submit', function(e) {
@@ -47,32 +53,38 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
    function fetchAndDisplayPosts() {
     firebase.firestore().collection('posts').orderBy('timestamp', 'desc').get().then((querySnapshot) => {
       let postsHtml = '';
+      let fetchPromises = [];
+  
       querySnapshot.forEach((doc) => {
         let post = doc.data();
         let postId = doc.id;
         let usernamePromise = fetchUsername(post.userId);
   
-        usernamePromise.then(username => {
-          postsHtml += `<div id="post-${postId}">
-                          ${post.content} - Posted by ${username}
-                          <button onclick="deletePost('${postId}')">Delete</button>
-                          <button onclick="likePost('${postId}', '${post.userId}')">Like</button>
-                          <span id="likes-${postId}">Likes: ${post.likes || 0}</span>
-                          <form onsubmit="commentOnPost('${postId}', event)">
-                            <input type="text" id="comment-${postId}" placeholder="Add a comment">
-                            <button type="submit">Comment</button>
-                          </form>
-                        </div>`;
-          document.getElementById('postsContainer').innerHTML = postsHtml;
+        let postHtmlPromise = usernamePromise.then(username => {
+          return `<div id="post-${postId}">
+                    ${post.content} - Posted by ${username}
+                    <button onclick="deletePost('${postId}')">Delete</button>
+                    <button onclick="likePost('${postId}', '${post.userId}')">Like</button>
+                    <span id="likes-${postId}">Likes: ${post.likes || 0}</span>
+                    <form onsubmit="commentOnPost('${postId}', event)">
+                      <input type="text" id="comment-${postId}" placeholder="Add a comment">
+                      <button type="submit">Comment</button>
+                    </form>
+                  </div>`;
         });
+  
+        fetchPromises.push(postHtmlPromise);
+      });
+  
+      Promise.all(fetchPromises).then(posts => {
+        postsHtml = posts.join('');
+        document.getElementById('postsContainer').innerHTML = postsHtml;
       });
     });
-  }// ... other parts of your code ...
-
+  }
     
     
     
-    fetchAndDisplayPosts();
 
     function deletePost(postId) {
       firebase.firestore().collection('posts').doc(postId).delete().then(() => {
@@ -83,39 +95,56 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
       });
     }
 
-    function likePost(postId) {
+    function likePost(postId, currentUserId) {
       var postRef = firebase.firestore().collection('posts').doc(postId);
+      postRef.get().then(doc => {
+        if (doc.exists) {
+          var post = doc.data();
+          var likedBy = post.likedBy || [];
     
-      postRef.update({
-        likes: firebase.firestore.FieldValue.increment(1)
-      }).then(() => {
-        postRef.get().then((doc) => {
-          if (doc.exists) {
-            var updatedPost = doc.data();
-            var likesCount = updatedPost.likes || 0;
-            document.getElementById(`likes-${postId}`).innerText = `Likes: ${likesCount}`;
+          if (!likedBy.includes(currentUserId)) {
+            likedBy.push(currentUserId);
+    
+            // Update both 'likes' count and 'likedBy' array
+            postRef.update({
+              likes: firebase.firestore.FieldValue.increment(1),
+              likedBy: likedBy
+            }).then(() => {
+              document.getElementById(`likes-${postId}`).innerText = `Likes: ${post.likes + 1}`;
+            });
           }
-        });
-      }).catch((error) => {
+        }
+      }).catch(error => {
         console.error('Error liking post: ', error);
       });
     }
     
     
+    
     function commentOnPost(postId, event) {
       event.preventDefault();
       var commentContent = document.getElementById(`comment-${postId}`).value;
+      if (commentContent.trim() === '') return; // Avoid empty comments
+    
       firebase.firestore().collection('comments').add({
         postId: postId,
         userId: firebase.auth().currentUser.uid,
         content: commentContent,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        // Handle successful comment
+        console.log('Comment added');
+        document.getElementById(`comment-${postId}`).value = ''; // Clear comment input
+      }).catch((error) => {
+        console.error('Error adding comment: ', error);
       });
     }
     
     
     
     
+    fetchAndDisplayPosts();
+
     
     
 
@@ -150,7 +179,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 
 
    
-    
+
 
     
 
