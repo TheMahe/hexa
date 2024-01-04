@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/hexa.css">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to hexa</h1>
+
+ 
+
+  <!-- New Post Form -->
+  <form id="new-post-form">
+    <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+    <button type="submit">Post</button>
+</form>
+
+
+<!-- Comment Template (hidden, used for cloning) -->
+<template id="comment-template">
+    <div class="comment">
+        <span class="comment-author"></span>:
+        <span class="comment-content"></span>
+    </div>
+</template>
+
+<!-- Posts Section -->
+<section id="posts-section">
+    <!-- Posts will be dynamically inserted here -->
+</section>
+
+
+  
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <!-- Add Firestore SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+
+    <script src="./js/app.js"></script>
+
+    <script>
+        
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = './index.html'; // Redirect to the login page
+            }
+            // User is signed in, continue with page load
+        });
+        </script>
+ 
+        </body>
+</html>
