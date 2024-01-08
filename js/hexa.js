@@ -18,3 +18,10 @@ if(session_id !== "") {
 } else {
     window.location.href = '/';
 }
+
+document.querySelector('#logout').addEventListener('click', function(e) {
+    e.preventDefault();
+    let session = new Session();
+    session.destroySession();
+    window.location.href = '/';
+})
