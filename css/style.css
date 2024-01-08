@@ -544,6 +544,7 @@ article .cta-p span {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
+    display: block;
 }
 
 .custom-modal h2 {
@@ -591,14 +592,10 @@ article .cta-p span {
     top: 30px;
 }
 
-.custom-modal ul li {
-    color: red;
+form ul {
+    list-style: none;
 }
 
-
-.google-btn {
-   padding: .7rem 3rem;
-    font-size: 1.2rem;
-    background-color: #fff;
-    color: #000;
+form ul li {
+    color: red;
 }

@@ -3,47 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="./css/hexa.css">
+    <link rel="icon" href="./assets/img/favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Hexa</title>
 </head>
 <body>
-    <h1>Welcome to hexa</h1>
+       
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="inner-container left-side">
+                    <img src="./assets/img/profile.jpg" class="profile" alt="">
+                    <p><b id="username">Mahe</b></p>
+                    <p id="email">mahe@gmail.com</p>
+
+                    <button id="editAccount" >Izmijeni nalog</button>
+                    <button id="logout" >Odjavi se</button>
+
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="inner-container right-side">
+                     <form id="postForm">
+                        <textarea id="postContent" placeholder="Napisi nesto i objavi"></textarea>
+                         <button>Objavi</button>
+                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<!-- Post creation form -->
-<div id="postFormContainer">
-    <form id="postForm">
-        <input type="text" id="postContent" placeholder="What's on your mind?">
-        <button type="submit">Post</button>
-    </form>
-
-      </form>
-      
-      
-</div>
 
 
-<!-- Container for posts -->
-<div id="postsContainer"></div>
 
-  
-
-
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
-    <!-- Add Firestore SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
-
-    <script src="./js/app.js"></script>
-
-    <script>
-        
-        firebase.auth().onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = './index.html'; // Redirect to the login page
-            }
-            // User is signed in, continue with page load
-        });
-        </script>
- 
+           <script src="./js/Session.js"></script>
+           <script src="./js/User.js"></script>
+           <script src="./js/hexa.js"></script>
         </body>
 </html>
