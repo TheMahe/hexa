@@ -1,6 +1,25 @@
+let session = new Session();
+session = session.getSession();
+
+if(session !== "") {
+    window.location.href = 'hexa.html';
+}
+
+document.querySelector('#loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let user = new User();
+
+
+    let email = document.querySelector('#login_email').value;
+    let password = document.querySelector('#login_lozinka').value;
+
+    user.email = email;
+    user.password = password;
+    user.login();
+})
 
 let config = {
-    "korisnicko_ime": {
+    "korisnicko_ime": { 
         "required": true,
         "minlength": 5,
         "maxlength": 50
@@ -41,3 +60,4 @@ document.querySelector('#registrationForm').addEventListener('submit', function(
         alert('Polja nisu dobro popunjena');
     }
 })
+
