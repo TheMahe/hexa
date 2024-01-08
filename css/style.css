@@ -495,7 +495,6 @@ article .cta-p span {
     transform: translate(-50%, -50%);
     width: 40rem;
     z-index: 100; 
-    display: none;
 }
 
 #loginForm h2 {
@@ -532,7 +531,6 @@ article .cta-p span {
 }
 
 .custom-modal {
-    display: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
@@ -546,6 +544,7 @@ article .cta-p span {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
+    display: block;
 }
 
 .custom-modal h2 {
