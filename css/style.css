@@ -591,3 +591,11 @@ article .cta-p span {
     right: 30px;
     top: 30px;
 }
+
+form ul {
+    list-style: none;
+}
+
+form ul li {
+    color: red;
+}
