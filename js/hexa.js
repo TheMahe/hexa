@@ -46,3 +46,14 @@ document.querySelector('#editForm').addEventListener('submit', function(e) {
     user.email = document.querySelector('#edit_email').value;
     user.edit();
 })
+
+document.querySelector('#deleteProfile').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    let text = 'Da li ste sigurni da želite da obrišete profil?';
+
+    if(confirm(text)) {
+        let user = new User(session_id);
+        user.delete();
+    }
+})
