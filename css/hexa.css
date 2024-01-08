@@ -63,3 +63,67 @@ body {
     cursor: pointer;
     outline-color: green;
 }
+
+.edit-acc-modal{  
+    display: none;
+   background-color: var(--black-color) ;
+    border-radius: 20px;
+    width: 40rem;
+    margin: auto;
+    padding: 4rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.edit-acc-modal a {
+    cursor: pointer;
+}
+
+.edit-acc-modal h2 {
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+     padding-top: 0;
+}
+
+.edit-acc-modal div{
+  padding: 1rem 0;
+}
+
+.edit-acc-modal div label{
+  display: block;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--white);
+  margin-bottom: .5rem;
+}
+
+.edit-acc-modal div input{
+  height: 4rem;
+  width: 100%;
+  font-size: 18px;
+  padding: 0 .6rem;
+}
+
+.edit-acc-modal div button {
+    cursor: pointer;
+    padding: .7rem 3rem;
+    font-size: 1.2rem;
+} 
+
+.edit-acc-modal button#closeModal {
+    height: 1.2rem;
+    width: 1.2rem;
+    color: var(--white);
+    background-color: transparent;
+    border: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
