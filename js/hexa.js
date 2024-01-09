@@ -8,11 +8,13 @@ if(session_id !== "") {
         let user = new User();
         user =  await user.get(session_id);
 
-        document.querySelector('#username').innerHTML = user.username;
-        document.querySelector('#email').innerHTML = user.email;
-
+        document.querySelector('#username').textContent = user.username;
+        document.querySelector('#email').textContent = user.email;
+        document.querySelector('.profile').src = user.profileImageUrl; // Set the profile image source
+    
         document.querySelector('#korisnicko_ime').value = user.username;
         document.querySelector('#edit_email').value = user.email;
+        document.querySelector('#profileImageUrlInput').value = user.profileImageUrl;
     }
 
     populateUserData()
@@ -44,7 +46,11 @@ document.querySelector('#editForm').addEventListener('submit', function(e) {
     let user = new User();
     user.username = document.querySelector('#korisnicko_ime').value;
     user.email = document.querySelector('#edit_email').value;
+    user.profileImageUrl = document.getElementById('profileImageUrlInput').value; // Get the new image URL from the form
     user.edit();
+
+    // Replace the profile image src with the new image URL
+    document.querySelector('.profile').src = user.profileImageUrl;
 })
 
 document.querySelector('#deleteProfile').addEventListener('click', function(e) {
@@ -57,6 +63,10 @@ document.querySelector('#deleteProfile').addEventListener('click', function(e) {
         user.delete();
     }
 })
+
+
+
+
 
 document.querySelector('#postForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -218,6 +228,13 @@ const likePost = btn => {
 const commentPost = btn => {
         let main_post_el = btn.closest('.single-post');
         let post_id = main_post_el.getAttribute('data-post_id');
+        let commentsSection = main_post_el.querySelector('.post-comments');
 
-        main_post_el.querySelector('.post-comments').style.display = 'block';
+
+
+        if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+            commentsSection.style.display = 'block';
+        } else {
+            commentsSection.style.display = 'none';
+        }
  }    

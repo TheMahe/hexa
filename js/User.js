@@ -3,6 +3,7 @@ class User {
     username ='';
     email ='';
     password ='';
+    profileImageUrl ='';
     api_url ='https://659c3020d565feee2dac9c63.mockapi.io';
 
     create() {
@@ -42,7 +43,8 @@ class User {
     edit() {
         let data = {
             username: this.username,
-            email: this.email
+            email: this.email,
+            profileImageUrl: this.profileImageUrl 
         }
 
         data = JSON.stringify(data);
