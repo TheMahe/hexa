@@ -109,52 +109,56 @@ document.querySelector('#postForm').addEventListener('submit', function(e) {
 async function getAllPosts() {
     let all_posts = new Post();
     all_posts = await all_posts.getAllPosts();
-    all_posts.forEach(async post => {
-        async function getPostUser() {
-            let user = new User();
-            user = await user.get(post.user_id);
-             
-            let comments = new Comment();
-            comments = await comments.get(post.id);
-    
-            let comments_html = '';
-            if (comments.length > 0) {
-                comments.forEach(comment => {
-                    comments_html += `<div class="single-comment">${comment.content}</div>`
-                });
-            }
-    
-            let delete_post_html = '';
-            if (session_id == post.user_id) {
-                delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
-            }
-    
-            let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
-                <div class="post-content">${post.content}</div>
-                <div class="post-actions">
-                    <p><b>Autor:</b> ${user.username}</p>
-                    <div>
-                        <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
-                        <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-                        ${delete_post_html}
-                    </div>
-                </div>
-                <div class="post-comments">
-                    <form>
-                        <input placeholder="Napisi Komentar..." type="text">
-                        <button onclick="commentPostSubmit(event)">Comment</button>
-                    </form>
-                    ${comments_html}
-                </div>
-            </div>`;
-    
-            let postWrapper = document.querySelector('#allPostsWrapper');
-            postWrapper.insertAdjacentHTML('afterbegin', newPostHtml);
+
+    // Create a new array of promises for the user and comments fetching
+    let promises = all_posts.map(async (post) => {
+        let user = await new User().get(post.user_id);
+        let comments = await new Comment().get(post.id);
+        return { post, user, comments }; // Return an object with all the data needed
+    });
+
+    // Resolve all the promises before proceeding
+    let postsWithUsersAndComments = await Promise.all(promises);
+
+    // Now you can sort the posts after all promises have been resolved
+    postsWithUsersAndComments.sort((a, b) => {
+        // Assuming post object has a created_at date in ISO format
+        return new Date(b.post.created_at) - new Date(a.post.created_at);
+    });
+
+    // Now that we have all data and it's sorted, we can render the posts
+    postsWithUsersAndComments.forEach(({ post, user, comments }) => {
+        let delete_post_html = '';
+        if (session_id == post.user_id) {
+            delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
         }
-    
-        getPostUser();
-    })
-    
+
+        // Construct comments HTML
+        let comments_html = comments.map(comment => `<div class="single-comment">${comment.content}</div>`).join('');
+
+        // Construct the post HTML
+        let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
+            <div class="post-content">${post.content}</div>
+            <div class="post-actions">
+                <p><b>Autor:</b> ${user.username}</p>
+                <div>
+                    <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
+                    <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+                    ${delete_post_html}
+                </div>
+            </div>
+            <div class="post-comments">
+                <form>
+                    <input placeholder="Napisi Komentar..." type="text">
+                    <button onclick="commentPostSubmit(event)">Comment</button>
+                </form>
+                ${comments_html}
+            </div>
+        </div>`;
+
+        let postWrapper = document.querySelector('#allPostsWrapper');
+        postWrapper.insertAdjacentHTML('afterbegin', newPostHtml);
+    });
 }
 
 

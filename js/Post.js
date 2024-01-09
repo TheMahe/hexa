@@ -3,6 +3,7 @@ class Post {
     post_content = "";
     user_id = "";
     likes = "";
+    created_at = "";
     api_url ='https://659c3020d565feee2dac9c63.mockapi.io';
 
    
@@ -15,6 +16,8 @@ class Post {
             user_id: user_id,
             likes: 0
         }
+
+        this.created_at = new Date();
 
         data = JSON.stringify(data);
 
