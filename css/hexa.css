@@ -132,3 +132,80 @@ body {
     color: red;
     padding: 5px 15px;
 }
+
+#allPostsWrapper .single-post {
+ background-color: #eaeaea;
+ padding: 15px;
+ margin-top: 15px;
+ color: #000;
+}
+
+#allPostsWrapper .single-post .post-content {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #000;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+#allPostsWrapper .single-post .post-comments form {
+    height: 30px;
+    margin-top: 15px;
+}
+
+#allPostsWrapper .single-post .post-comments form input {
+    width: 85%;
+    padding: 0 10px;
+}
+
+#allPostsWrapper .single-post .post-comments form button {
+    width: 15%;
+    background-color: grey;
+}
+
+#allPostsWrapper .single-post .post-content {
+   padding-bottom: 10px;
+   border-bottom: 1px solid #000;
+   margin-bottom: 10px;
+   font-size: 22px;
+}
+
+#allPostsWrapper .single-post .post-actions {
+    display: flex;
+    justify-content: space-between;
+    color: grey;
+}
+
+#allPostsWrapper .single-post .post-actions div button.like-btn {
+    background-image: url(../assets/img/like.png);
+    padding:  5px 15px 5px 40px;
+    background-repeat: no-repeat;
+    background-position: 10px;
+    border: 0;
+}
+
+
+#allPostsWrapper .single-post .post-actions div button.comment-btn {
+    background-image: url(../assets/img/comment.png);
+    padding:  5px 15px 5px 40px;
+    background-repeat: no-repeat;
+    background-position: 10px;
+    border: 0;
+}
+
+#allPostsWrapper .single-post .post-actions div button.remove-btn {
+    border-color: red;
+    color: red;
+    padding: 5px 15px;
+
+
+}
+
+#allPostsWrapper .single-post .post-comments {
+    display: none;
+}
+
+#allPostsWrapper .single-post .post-comments .single-comment {
+    border: 1px dotted green;
+    padding: 10px;
+    margin-top: 10px;
+}
