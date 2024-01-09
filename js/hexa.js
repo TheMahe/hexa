@@ -109,59 +109,61 @@ document.querySelector('#postForm').addEventListener('submit', function(e) {
 async function getAllPosts() {
     let all_posts = new Post();
     all_posts = await all_posts.getAllPosts();
-
     all_posts.forEach(async post => {
-       async function getPostUser() {
-
-        let user = new User();
-        user = await user.get(post.user_id);
-         
-        let comments = new Comment();
-        comments = await comments.get(post.id);
-
-        let comments_html = '';
-        if(comments.length > 0) {
-            comments.forEach(comment => {
-                comments_html += `<div class="single-comment">${comment.content}</div>`
-            })
-         }
-
-        let html = document.querySelector('#allPostsWrapper').innerHTML;
-
-        let delete_post_html = '';
-        if(session_id == post.user_id) {
-            delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+        async function getPostUser() {
+            let user = new User();
+            user = await user.get(post.user_id);
+             
+            let comments = new Comment();
+            comments = await comments.get(post.id);
+    
+            let comments_html = '';
+            if (comments.length > 0) {
+                comments.forEach(comment => {
+                    comments_html += `<div class="single-comment">${comment.content}</div>`
+                });
+            }
+    
+            let delete_post_html = '';
+            if (session_id == post.user_id) {
+                delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+            }
+    
+            let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
+                <div class="post-content">${post.content}</div>
+                <div class="post-actions">
+                    <p><b>Autor:</b> ${user.username}</p>
+                    <div>
+                        <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
+                        <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+                        ${delete_post_html}
+                    </div>
+                </div>
+                <div class="post-comments">
+                    <form>
+                        <input placeholder="Napisi Komentar..." type="text">
+                        <button onclick="commentPostSubmit(event)">Comment</button>
+                    </form>
+                    ${comments_html}
+                </div>
+            </div>`;
+    
+            let postWrapper = document.querySelector('#allPostsWrapper');
+            postWrapper.insertAdjacentHTML('afterbegin', newPostHtml);
         }
-
-        document.querySelector('#allPostsWrapper').innerHTML += `<div class="single-post" data-post_id="${post.id}">
-         <div class="post-content">${post.content}</div>
-         
-         <div class="post-actions">
-         <p><b>Autor:</b> ${user.username}</p>
-         <div>
-         <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
-         <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-             ${delete_post_html}
-         </div>
-     </div>
-     
-
-         <div class="post-comments">
-         <form>
-           <input placeholder="Napisi Komentar..." type="text">
-           <button onclick="commentPostSubmit(event)">Comment</button>
-         </form>
-            ${comments_html}
-      </div>
-        </div>
-        
-        ` + html;
-       }
-       getPostUser();
+    
+        getPostUser();
     })
+    
 }
 
-getAllPosts();
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // This code will run after the document is fully loaded
+    getAllPosts();
+});
+
 
 const commentPostSubmit = e => {
    e.preventDefault();
