@@ -68,6 +68,7 @@ body {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
     box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
 
 }
 
@@ -77,7 +78,8 @@ body {
     background: linear-gradient(45deg, black, transparent);
     cursor: pointer;
     border-radius: 10px;
-    color: var(--dark-orange) !important;
+    color: var(--light-orange)
+    !important;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 
@@ -96,6 +98,12 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
+    background: rgba(33,37,41,.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    border-radius: 20px !important;
 }
 
 .edit-acc-modal a {
@@ -147,6 +155,35 @@ body {
     top: 30px;
 }
 
+#close-acc-modal {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    font-size: 20px;
+}
+
+#editAccount {
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
+    padding: 5px 15px;
+
+}
+
+#logout {
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
+    padding: 5px 15px;
+
+}
+
 #deleteProfile {
     border: 2px solid red;
     color: red;
@@ -163,6 +200,7 @@ body {
  -webkit-backdrop-filter: blur(10px);
  border: 1px solid #404040b5;
  box-shadow: 0 2px 10px #0000001a;
+ border-radius: 20px !important;
 }
 
 #allPostsWrapper .single-post .post-content {
@@ -170,6 +208,7 @@ body {
     border-bottom: 1px solid #000;
     margin-bottom: 10px;
     font-size: 22px;
+
     
 }
 
