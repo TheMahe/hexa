@@ -5,6 +5,15 @@ if(session !== "") {
     window.location.href = 'hexa.html';
 }
 
+burger = document.querySelector('.burger')
+navbar = document.querySelector('nav')
+menu = document.querySelector('.responsive_menu')
+
+burger.addEventListener('click', () => {
+    burger.classList.toggle('change');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    navbar.classList.toggle('mobile-menu');
+});
 
 
 let config = {
@@ -49,4 +58,5 @@ document.querySelector('#registrationForm').addEventListener('submit', function(
         alert('Polja nisu dobro popunjena');
     }
 })
+
 

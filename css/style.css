@@ -24,6 +24,46 @@ body {
     background-color: #0f1312;
 }
 
+header .responsive_menu {
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    border-radius: 2rem;
+    /* border radius on top 0 */
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    z-index: 999;
+    display: none;
+}
+
+.mobile-menu {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+
+header .responsive_menu ul li {
+    list-style-type: none;
+    margin: 0 1rem;
+    
+  }
+
+    header .responsive_menu ul li a {
+        text-decoration: none;
+        color: var(--white);
+        font-weight: 500;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding-bottom: 1rem;
+
+    }
+
 header {
     max-width: 50rem;
     height: 2rem;
@@ -646,3 +686,192 @@ form ul {
 form ul li {
     color: red;
 }
+
+/* Styles for screens smaller than 768px */
+@media (max-width: 767px) {
+    .custom-modal {
+        width: 90%;
+        padding: 2rem;
+    }
+}
+
+/* Styles for screens larger than 768px */
+@media (min-width: 768px) {
+    .custom-modal {
+        width: 40rem;
+        padding: 4rem;
+    }
+}
+/* Default styles */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.padding-large {
+    padding: .7rem 3rem;
+}
+
+.font-size-medium {
+    font-size: 1.2rem;
+}
+
+.background-light {
+    background: rgba(114,114,114,.2);
+}
+
+.backdrop-filter-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.border-light-orange {
+    border: 1px solid var(--light-orange);
+}
+
+.box-shadow {
+    box-shadow: 0 2px 10px #0000001a;
+}
+
+.color-light-orange {
+    color: var(--light-orange);
+}
+
+/* Responsive styles */
+@media (max-width: 767px) {
+    .custom-modal {
+        width: 90%;
+        padding: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .custom-modal {
+        width: 40rem;
+        padding: 4rem;
+    }
+}
+
+.custom-modal {
+    background: rgba(114,114,114,.2);
+    border: 1px solid #404040b5;
+    border-radius: 20px;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: block;
+}
+
+.custom-modal h2 {
+    background: var(--text-gradient-white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-top: 0;
+    color: var(--light-orange);
+}
+
+.custom-modal div {
+    padding: 1rem 0;
+}
+
+.custom-modal div label {
+    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: .5rem;
+    color: var(--light-orange);
+}
+
+.custom-modal div input {
+    height: 4rem;
+    width: 100%;
+    font-size: 18px;
+    padding: 0 .6rem;
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
+}
+
+.custom-modal div button {
+    cursor: pointer;
+    padding: .7rem 3rem;
+    font-size: 1.2rem;
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--light-orange);
+    box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
+}
+
+.custom-modal #closeModal {
+    height: 1.2rem;
+    width: 1.2rem;
+    color: var(--white);
+    background-color: transparent;
+    border: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    text-decoration: none;
+}
+
+form ul {
+    list-style: none;
+}
+
+form ul li {
+    color: red;
+}
+
+.burger {
+    display: inline-block;
+    cursor: pointer;
+    display: none;
+  }
+  
+  .bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #fff;
+    margin: 6px 0;
+    transition: 0.4s;
+  }
+  
+  /* Rotate first bar */
+  .change .bar1 {
+    transform: translate(0, 11px) rotate(-45deg);
+  }
+  
+  /* Fade out the second bar */
+  .change .bar2 {opacity: 0;}
+  
+  /* Rotate last bar */
+  .change .bar3 {
+    transform: translate(0, -11px) rotate(45deg);
+  }
+
+
+  @media only screen and (max-width: 768px) {
+    .burger {
+      display: block;
+    }
+    .nav__list {
+      display: none;
+    }
+    .nav__list.active {
+      display: block;
+    }
+
+    .nav_menu {
+        display: none;
+    }
+  }

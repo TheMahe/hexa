@@ -33,20 +33,7 @@ messages.addEventListener('click', () => {
   
 
 
-  //Run animations
-  barba.init({
-    transitions: [{
-      name: 'opacity-transition',
-      leave(data) {
-        // Your leave animation code
-      },
-      enter(data) {
-        window.scrollTo(0, 0);
-        initAnimations();
-      }
-    }]
-  });
-
+  
 function initAnimations() {
     // Highlight page 2
 const tlH = gsap.timeline({  
