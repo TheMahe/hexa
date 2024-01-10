@@ -1,98 +1,104 @@
 class Validator {
-    constructor(config, formID) {
-        this.config = config;
-        this.form = document.querySelector(formID);
-        this.errors = {};
+	constructor(config, formID) {
+		this.elementsConfig = config;
+		this.formID = formID;
+		this.errors = {};
+		
+		this.generateErrorsObject();
+		this.inputListener();
+	}
 
-        this.initErrors();
-        this.attachInputListeners();
-    }
+	generateErrorsObject() {
+		for(let field in this.elementsConfig) {
+			this.errors[field] = [];
+		}
+	}
 
-    initErrors() {
-        Object.keys(this.config).forEach(field => this.errors[field] = []);
-    }
+	inputListener() {
+		let inputSelector = this.elementsConfig;
 
-    attachInputListeners() {
-        Object.keys(this.config).forEach(field => {
-            const input = this.form.querySelector(`input[name="${field}"]`);
-            input.addEventListener('input', this.handleInput.bind(this));
-        });
-    }
+		for(let field in inputSelector) {
+			let el = document.querySelector(`${this.formID} input[name="${field}"]`);
 
-    handleInput(event) {
-        const field = event.target;
-        const fieldName = field.name;
-        const fieldValue = field.value.trim();
+			el.addEventListener('input', this.validate.bind(this));
+		}
+	}
 
-        this.resetFieldErrors(fieldName);
-        this.performValidations(fieldName, fieldValue);
+	validate(e) {
+		let elFields = this.elementsConfig;
 
-        this.displayErrors();
-    }
+		let field = e.target;
+		let fieldName = field.getAttribute('name');
+		let fieldValue = field.value;
 
-    resetFieldErrors(fieldName) {
-        this.errors[fieldName] = [];
-    }
+		this.errors[fieldName] = [];
 
-    performValidations(fieldName, fieldValue) {
-        const rules = this.config[fieldName];
+		if(elFields[fieldName].required) {
+			if(fieldValue === '') {
+				this.errors[fieldName].push('Polje je prazno');
+			}
+		}
 
-        if (rules.required && !fieldValue) {
-            this.addError(fieldName, 'Field is required');
-        }
+		if(elFields[fieldName].email) {
+			if(!this.validateEmail(fieldValue)) {
+				this.errors[fieldName].push('Neispravna email adresa');
+			}
+		}
 
-        if (rules.email && !this.isValidEmail(fieldValue)) {
-            this.addError(fieldName, 'Invalid email address');
-        }
+		if(fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
+			this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`);
+		}
 
-        if (fieldValue.length < rules.minlength || fieldValue.length > rules.maxlength) {
-            this.addError(fieldName, `Field must be between ${rules.minlength} and ${rules.maxlength} characters`);
-        }
+		if(elFields[fieldName].matching) {
+			let matchingEl = document.querySelector(`${this.formID} input[name="${elFields[fieldName].matching}"]`);
 
-        if (rules.matching && fieldValue !== this.form.querySelector(`input[name="${rules.matching}"]`).value) {
-            this.addError(fieldName, 'Passwords do not match');
-        }
-    }
+			if(fieldValue !== matchingEl.value) {
+				this.errors[fieldName].push('Lozinke se ne poklapaju');
+			}
 
-    addError(fieldName, message) {
-        this.errors[fieldName].push(message);
-    }
+			if(this.errors[fieldName].length === 0) {
+				this.errors[fieldName] = [];
+				this.errors[elFields[fieldName].matching] = [];
+			}
+		}
 
-    displayErrors() {
-        this.clearPreviousErrors();
+		this.populateErrors(this.errors);
+	}
 
-        Object.keys(this.errors).forEach(field => {
-            const fieldErrors = this.errors[field];
-            if (fieldErrors.length > 0) {
-                const errorList = this.createErrorElement(fieldErrors);
-                const parentElement = this.form.querySelector(`input[name="${field}"]`).parentElement;
-                parentElement.appendChild(errorList);
-            }
-        });
-    }
+	validationPassed() {
+		for(let key of Object.keys(this.errors)) {
+			if(this.errors[key].length > 0) {
+				return false;
+			}
+		}
 
-    clearPreviousErrors() {
-        this.form.querySelectorAll('ul.error-messages').forEach(node => node.remove());
-    }
+		return true;
+	}
 
-    createErrorElement(errors) {
-        const ul = document.createElement('ul');
-        ul.className = 'error-messages';
-        errors.forEach(error => {
-            const li = document.createElement('li');
-            li.textContent = error;
-            ul.appendChild(li);
-        });
-        return ul;
-    }
+	populateErrors(errors) {
+		for(const elem of document.querySelectorAll('ul')) {
+			elem.remove();
+		}
 
-    isValidEmail(email) {
-        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        return emailRegex.test(email);
-    }
+		for(let key of Object.keys(errors)) {
+			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
+			let errorsElement = document.createElement('ul');
+			parentElement.appendChild(errorsElement);
 
-    isFormValid() {
-        return Object.values(this.errors).every(errors => errors.length === 0);
-    }
+			errors[key].forEach(error => {
+				let li = document.createElement('li');
+				li.innerText = error;
+
+				errorsElement.appendChild(li);
+			});
+		}
+	}
+
+	validateEmail(email) {
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+	    	return true;
+		}
+	    
+	    return false;
+	}
 }
-

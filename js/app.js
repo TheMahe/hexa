@@ -9,11 +9,13 @@ burger = document.querySelector('.burger')
 navbar = document.querySelector('nav')
 menu = document.querySelector('.responsive_menu')
 
-burger.addEventListener('click', () => {
-    burger.classList.toggle('change');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    navbar.classList.toggle('mobile-menu');
-});
+if (burger) {
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('change');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        navbar.classList.toggle('mobile-menu');
+    });
+}
 
 
 let config = {
@@ -48,7 +50,7 @@ let validator = new Validator(config, '#registrationForm');
 document.querySelector('#registrationForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    if(validator.validationPassed()) {
+    if (validator.validationPassed()) {
         let user = new User();
         user.username = document.querySelector('#korisnicko_ime').value;
         user.email = document.querySelector('#register_email').value;

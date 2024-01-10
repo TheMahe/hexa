@@ -1,103 +1,118 @@
 class User {
-    user_id ='';
-    username ='';
-    email ='';
-    password ='';
-    profileImageUrl ='';
-    api_url ='https://659c3020d565feee2dac9c63.mockapi.io';
+    constructor() {
+        this.user_id = '';
+        this.username = '';
+        this.email = '';
+        this.password = '';
+        this.profileImageUrl = '';
+        this.api_url = 'https://659c3020d565feee2dac9c63.mockapi.io';
+    }
 
-    create() {
-        let data = {
+    async create() {
+        const data = {
             username: this.username,
             email: this.email,
             password: this.password
-        }
-            
-        data = JSON.stringify(data);
-        
-        fetch(this.api_url + '/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data,
-        })
-        .then(response => response.json())
-        .then(data => {
-            let session = new Session();
-            session.user_id = data.id;
+        };
+
+        try {
+            const response = await fetch(`${this.api_url}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const responseData = await response.json();
+
+            const session = new Session();
+            session.user_id = responseData.id;
             session.startSession();
             window.location.href = 'hexa.html';
-        })
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
     }
 
-    async get(user_id){
-        let api_url = this.api_url + '/users/' + user_id;
+    async get(user_id) {
+        const api_url = `${this.api_url}/users/${user_id}`;
 
-        let response = await fetch(api_url)
-        let data = await response.json()
+        try {
+            const response = await fetch(api_url);
+            const data = await response.json();
 
-        return data;
+            return data;
+        } catch (error) {
+            console.error('Error getting user:', error);
+        }
     }
 
-    edit() {
-        let data = {
+    async edit() {
+        const data = {
             username: this.username,
             email: this.email,
-            profileImageUrl: this.profileImageUrl 
-        }
+            profileImageUrl: this.profileImageUrl
+        };
 
-        data = JSON.stringify(data);
+        try {
+            const session = new Session();
+            const session_id = session.getSession();
 
-        let session = new Session();
-        session_id = session.getSession();
+            const response = await fetch(`${this.api_url}/users/${session_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
 
-        fetch(this.api_url + '/users/' + session_id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data,
-        })
-        .then(response => response.json())
-        .then(data => {
+            const responseData = await response.json();
+
             window.location.href = 'hexa.html';
-        })
+        } catch (error) {
+            console.error('Error editing user:', error);
+        }
     }
 
-    login() {
-        fetch(this.api_url + '/users')
-        .then(response => response.json())
-        .then(data => {
-            let login_successful = 0
-           data.forEach(db_user => {
-               if(db_user.email === this.email && db_user.password === this.password) {
-                    let session = new Session();
+    async login() {
+        try {
+            const response = await fetch(`${this.api_url}/users`);
+            const data = await response.json();
+
+            let login_successful = false;
+
+            data.forEach(db_user => {
+                if (db_user.email === this.email && db_user.password === this.password) {
+                    const session = new Session();
                     session.user_id = db_user.id;
                     session.startSession();
-                    login_successful = 1;
+                    login_successful = true;
                     window.location.href = 'hexa.html';
+                }
+            });
 
-               } 
-           }) 
-
-           if(login_successful === 0) {
-               alert('Pogresan email ili lozinka');
-           }
-        });
+            if (!login_successful) {
+                alert('Pogresan email ili lozinka');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
     }
 
-    delete() {
-        let session = new Session();
-        session_id = session.getSession();
+    async delete() {
+        try {
+            const session = new Session();
+            const session_id = session.getSession();
 
-        fetch(this.api_url + '/users/' + session_id, {
-            method: 'DELETE',
-        })
-        .then(response => response.json())
-        .then(data => {
+            await fetch(`${this.api_url}/users/${session_id}`, {
+                method: 'DELETE'
+            });
+
             session.destroySession();
             window.location.href = '/';
-        })
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     }
 }

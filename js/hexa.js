@@ -214,16 +214,20 @@ const RemoveMyPost = btn => {
 
 const likePost = btn => {
     let main_post_el = btn.closest('.single-post');
-    let post_id = btn.closest('.single-post').getAttribute('data-post_id');
+    let post_id = main_post_el.getAttribute('data-post_id');
 
-    let number_of_likes = parseInt(btn.querySelector('span').innerText);
-
-    btn.querySelector('span').innerText = number_of_likes + 1;
-    btn.setAttribute('disabled', 'true');
-
+    // Call the like method from the Post class
     let post = new Post();
-    post.like(post_id, number_of_likes + 1);
-    }
+    post.like(post_id, session_id).then(() => {
+        // Update the like count in the UI
+        let number_of_likes = parseInt(btn.querySelector('span').innerText);
+        btn.querySelector('span').innerText = number_of_likes + 1;
+
+        // Disable the like button
+        btn.setAttribute('disabled', 'true');
+    });
+}
+
 
 const commentPost = btn => {
         let main_post_el = btn.closest('.single-post');
