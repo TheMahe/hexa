@@ -217,7 +217,7 @@ const likePost = async (btn) => {
     let updatedPost = await post.like(post_id, session_id);
     let number_of_likes = parseInt(btn.querySelector("span").innerText);
     btn.querySelector("span").innerText = updatedPost.likes; // Update the like count in the UI
-    btn.setAttribute("disabled", "true"); // Disable the like button
+    btn.classList.toggle("liked", updatedPost.likedByUser); // Toggle the liked class based on the updated post's state
   } catch (error) {
     console.error("Error liking post:", error);
   }

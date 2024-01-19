@@ -249,11 +249,15 @@ body {
 }
 
 #allPostsWrapper .single-post .post-actions div button.like-btn {
-  background-image: url(../assets/img/like.png);
+  background-image: url(../assets/img/heart.svg);
   padding: 5px 15px 5px 40px;
   background-repeat: no-repeat;
   background-position: 10px;
   border: 0;
+}
+
+#allPostsWrapper .single-post .post-actions div button.like-btn.liked {
+  background-image: url(../assets/img/heart-fill.svg);
 }
 
 #allPostsWrapper .single-post .post-actions div button.comment-btn {
