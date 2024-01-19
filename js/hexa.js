@@ -1,94 +1,92 @@
 let session = new Session();
 session_id = session.getSession();
 
-if(session_id !== "") {
-    
+if (session_id !== "") {
+  async function populateUserData() {
+    let user = new User();
+    user = await user.get(session_id);
 
-    async function populateUserData() {
-        let user = new User();
-        user =  await user.get(session_id);
+    document.querySelector("#username").textContent = user.username;
+    document.querySelector("#email").textContent = user.email;
+    document.querySelector(".profile").src = user.profileImageUrl; // Set the profile image source
 
-        document.querySelector('#username').textContent = user.username;
-        document.querySelector('#email').textContent = user.email;
-        document.querySelector('.profile').src = user.profileImageUrl; // Set the profile image source
-    
-        document.querySelector('#korisnicko_ime').value = user.username;
-        document.querySelector('#edit_email').value = user.email;
-        document.querySelector('#profileImageUrlInput').value = user.profileImageUrl;
-    }
+    document.querySelector("#korisnicko_ime").value = user.username;
+    document.querySelector("#edit_email").value = user.email;
+    document.querySelector("#profileImageUrlInput").value =
+      user.profileImageUrl;
+  }
 
-    populateUserData()
-
-
+  populateUserData();
 } else {
-    window.location.href = '/';
+  window.location.href = "/";
 }
 
-document.querySelector('#logout').addEventListener('click', function(e) {
+document.querySelector("#logout").addEventListener("click", function (e) {
+  e.preventDefault();
+  let session = new Session();
+  session.destroySession();
+  window.location.href = "/";
+});
+
+document.querySelector("#editAccount").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.querySelector(".edit-acc-modal").style.display = "block";
+});
+
+document
+  .querySelector("#close-acc-modal")
+  .addEventListener("click", function (e) {
     e.preventDefault();
-    let session = new Session();
-    session.destroySession();
-    window.location.href = '/';
-})
+    document.querySelector(".edit-acc-modal").style.display = "none";
+  });
 
-document.querySelector('#editAccount').addEventListener('click', function(e) {
+document.querySelector("#editForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  let user = new User();
+  user.username = document.querySelector("#korisnicko_ime").value;
+  user.email = document.querySelector("#edit_email").value;
+  user.profileImageUrl = document.getElementById("profileImageUrlInput").value; // Get the new image URL from the form
+  user.edit();
+
+  // Replace the profile image src with the new image URL
+  document.querySelector(".profile").src = user.profileImageUrl;
+});
+
+document
+  .querySelector("#deleteProfile")
+  .addEventListener("click", function (e) {
     e.preventDefault();
-    document.querySelector('.edit-acc-modal').style.display = 'block';
-})
 
-document.querySelector('#close-acc-modal').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.querySelector('.edit-acc-modal').style.display = 'none';
-})
+    let text = "Da li ste sigurni da želite da obrišete profil?";
 
-document.querySelector('#editForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    let user = new User();
-    user.username = document.querySelector('#korisnicko_ime').value;
-    user.email = document.querySelector('#edit_email').value;
-    user.profileImageUrl = document.getElementById('profileImageUrlInput').value; // Get the new image URL from the form
-    user.edit();
-
-    // Replace the profile image src with the new image URL
-    document.querySelector('.profile').src = user.profileImageUrl;
-})
-
-document.querySelector('#deleteProfile').addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    let text = 'Da li ste sigurni da želite da obrišete profil?';
-
-    if(confirm(text)) {
-        let user = new User(session_id);
-        user.delete();
+    if (confirm(text)) {
+      let user = new User(session_id);
+      user.delete();
     }
-})
+  });
 
+document.querySelector("#postForm").addEventListener("submit", function (e) {
+  e.preventDefault();
 
+  async function createPost() {
+    let content = document.querySelector("#postContent").value;
+    document.querySelector("#postContent").value = "";
+    let post = new Post();
+    post.post_content = content;
+    post = await post.create();
 
+    let current_user = new User();
+    current_user = await current_user.get(session_id);
 
+    let html = document.querySelector("#allPostsWrapper").innerHTML;
 
-document.querySelector('#postForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    async function createPost() {
-        let content = document.querySelector('#postContent').value;
-        document.querySelector('#postContent').value = "";
-        let post = new Post();
-        post.post_content = content;
-        post = await post.create();
-        
-        let current_user = new User();
-        current_user = await current_user.get(session_id);
+    let delete_post_html = "";
+    if (session_id == post.user_id) {
+      delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+    }
 
-        let html = document.querySelector('#allPostsWrapper').innerHTML;
-
-        let delete_post_html = '';
-        if(session_id == post.user_id) { 
-          delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
-        }
-
-        document.querySelector('#allPostsWrapper').innerHTML = `<div class="single-post" data-post_id="${post.id}">
+    document.querySelector("#allPostsWrapper").innerHTML =
+      `<div class="single-post" data-post_id="${post.id}">
          <div class="post-content">${post.content}</div>
          
          <div class="post-actions">
@@ -110,44 +108,45 @@ document.querySelector('#postForm').addEventListener('submit', function(e) {
         </div>
         
         ` + html;
-  
-    }
+  }
 
-    createPost();
-})
+  createPost();
+});
 
 async function getAllPosts() {
-    let all_posts = new Post();
-    all_posts = await all_posts.getAllPosts();
+  let all_posts = new Post();
+  all_posts = await all_posts.getAllPosts();
 
-    // Create a new array of promises for the user and comments fetching
-    let promises = all_posts.map(async (post) => {
-        let user = await new User().get(post.user_id);
-        let comments = await new Comment().get(post.id);
-        return { post, user, comments }; // Return an object with all the data needed
-    });
+  // Create a new array of promises for the user and comments fetching
+  let promises = all_posts.map(async (post) => {
+    let user = await new User().get(post.user_id);
+    let comments = await new Comment().get(post.id);
+    return { post, user, comments }; // Return an object with all the data needed
+  });
 
-    // Resolve all the promises before proceeding
-    let postsWithUsersAndComments = await Promise.all(promises);
+  // Resolve all the promises before proceeding
+  let postsWithUsersAndComments = await Promise.all(promises);
 
-    // Now you can sort the posts after all promises have been resolved
-    postsWithUsersAndComments.sort((a, b) => {
-        // Assuming post object has a created_at date in ISO format
-        return new Date(b.post.created_at) - new Date(a.post.created_at);
-    });
+  // Now you can sort the posts after all promises have been resolved
+  postsWithUsersAndComments.sort((a, b) => {
+    // Assuming post object has a created_at date in ISO format
+    return new Date(b.post.created_at) - new Date(a.post.created_at);
+  });
 
-    // Now that we have all data and it's sorted, we can render the posts
-    postsWithUsersAndComments.forEach(({ post, user, comments }) => {
-        let delete_post_html = '';
-        if (session_id == post.user_id) {
-            delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
-        }
+  // Now that we have all data and it's sorted, we can render the posts
+  postsWithUsersAndComments.forEach(({ post, user, comments }) => {
+    let delete_post_html = "";
+    if (session_id == post.user_id) {
+      delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+    }
 
-        // Construct comments HTML
-        let comments_html = comments.map(comment => `<div class="single-comment">${comment.content}</div>`).join('');
+    // Construct comments HTML
+    let comments_html = comments
+      .map((comment) => `<div class="single-comment">${comment.content}</div>`)
+      .join("");
 
-        // Construct the post HTML
-        let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
+    // Construct the post HTML
+    let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
             <div class="post-content">${post.content}</div>
             <div class="post-actions">
                 <p><b>Autor:</b> ${user.username}</p>
@@ -166,79 +165,75 @@ async function getAllPosts() {
             </div>
         </div>`;
 
-        let postWrapper = document.querySelector('#allPostsWrapper');
-        postWrapper.insertAdjacentHTML('afterbegin', newPostHtml);
-    });
+    let postWrapper = document.querySelector("#allPostsWrapper");
+    postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
+  });
 }
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // This code will run after the document is fully loaded
-    getAllPosts();
+document.addEventListener("DOMContentLoaded", function () {
+  // This code will run after the document is fully loaded
+  getAllPosts();
 });
 
+const commentPostSubmit = (e) => {
+  e.preventDefault();
 
-const commentPostSubmit = e => {
-   e.preventDefault();
+  let btn = e.target;
+  btn.setAttribute("disabled", "true");
 
-   let btn = e.target;
-   btn.setAttribute('disabled', 'true');
+  let main_post_el = btn.closest(".single-post");
+  let post_id = main_post_el.getAttribute("data-post_id");
 
-   let main_post_el = btn.closest('.single-post');
-   let post_id = main_post_el.getAttribute('data-post_id');
+  let comment_value = main_post_el.querySelector("input").value;
 
+  main_post_el.querySelector("input").value = "";
 
-    let comment_value = main_post_el.querySelector('input').value;
+  main_post_el.querySelector(
+    ".post-comments"
+  ).innerHTML += `<div class="single-comment">${comment_value}</div>`;
 
-    main_post_el.querySelector('input').value = "";
+  let comment = new Comment();
+  comment.content = comment_value;
+  comment.user_id = session_id;
+  comment.post_id = post_id;
+  comment.create();
+};
 
-    main_post_el.querySelector('.post-comments').innerHTML += `<div class="single-comment">${comment_value}</div>`
-    
-    let comment = new Comment();
-    comment.content = comment_value;
-    comment.user_id = session_id;
-    comment.post_id = post_id;
-    comment.create();
-}
+const RemoveMyPost = (btn) => {
+  let post_id = btn.closest(".single-post").getAttribute("data-post_id");
 
-const RemoveMyPost = btn => {
-   let post_id = btn.closest('.single-post').getAttribute('data-post_id');
+  btn.closest(".single-post").remove();
 
-    btn.closest('.single-post').remove();
+  let post = new Post();
+  post.delete(post_id);
+};
 
-    let post = new Post();
-    post.delete(post_id);
+const likePost = async (btn) => {
+  let main_post_el = btn.closest(".single-post");
+  let post_id = main_post_el.getAttribute("data-post_id");
 
-}
+  let post = new Post();
+  try {
+    let updatedPost = await post.like(post_id, session_id);
+    let number_of_likes = parseInt(btn.querySelector("span").innerText);
+    btn.querySelector("span").innerText = updatedPost.likes; // Update the like count in the UI
+    btn.setAttribute("disabled", "true"); // Disable the like button
+  } catch (error) {
+    console.error("Error liking post:", error);
+  }
+};
 
-const likePost = btn => {
-    let main_post_el = btn.closest('.single-post');
-    let post_id = main_post_el.getAttribute('data-post_id');
+const commentPost = (btn) => {
+  let main_post_el = btn.closest(".single-post");
+  let post_id = main_post_el.getAttribute("data-post_id");
+  let commentsSection = main_post_el.querySelector(".post-comments");
 
-    // Call the like method from the Post class
-    let post = new Post();
-    post.like(post_id, session_id).then(() => {
-        // Update the like count in the UI
-        let number_of_likes = parseInt(btn.querySelector('span').innerText);
-        btn.querySelector('span').innerText = number_of_likes + 1;
-
-        // Disable the like button
-        btn.setAttribute('disabled', 'true');
-    });
-}
-
-
-const commentPost = btn => {
-        let main_post_el = btn.closest('.single-post');
-        let post_id = main_post_el.getAttribute('data-post_id');
-        let commentsSection = main_post_el.querySelector('.post-comments');
-
-
-
-        if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
-            commentsSection.style.display = 'block';
-        } else {
-            commentsSection.style.display = 'none';
-        }
- }    
+  if (
+    commentsSection.style.display === "none" ||
+    commentsSection.style.display === ""
+  ) {
+    commentsSection.style.display = "block";
+  } else {
+    commentsSection.style.display = "none";
+  }
+};
