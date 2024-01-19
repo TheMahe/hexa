@@ -6,6 +6,16 @@ class Post {
   created_at = "";
   api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 
+  constructor() {
+    this.likes = []; // Initialize likes as an empty array
+  }
+
+  async get(postId) {
+    const response = await fetch(`${this.api_url}/posts/${postId}`);
+    const postData = await response.json();
+    return postData;
+  }
+
   async create() {
     let session = new Session();
     let user_id = session.getSession();
@@ -39,6 +49,11 @@ class Post {
 
   async like(postId, userId, liked) {
     let post = await this.get(postId);
+
+    // Ensure that post.likes is an array
+    if (!Array.isArray(post.likes)) {
+      post.likes = [];
+    }
 
     if (liked) {
       // Add user ID to the likes array if not already present

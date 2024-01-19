@@ -208,10 +208,6 @@ const RemoveMyPost = (btn) => {
   post.delete(post_id);
 };
 
-const hasUserLikedPost = (post, userId) => {
-  return post.likes.includes(userId);
-};
-
 const toggleLikeStatus = async (postId, userId, liked) => {
   try {
     const post = new Post();
@@ -238,14 +234,25 @@ const getUserId = () => {
   return "";
 };
 
-const likePost = async (btn) => {
-  const postId = btn.closest(".single-post").getAttribute("data-post_id");
-  const userId = getUserId(); // Call getUserId to get the current user's ID
-  const liked = !hasUserLikedPost(post, userId); // Toggle like status
+const hasUserLikedPost = (post, userId) => {
+  return post.likes && post.likes.includes(userId);
+};
 
+const likePost = async (btn) => {
   try {
+    const postId = btn.closest(".single-post").getAttribute("data-post_id");
+    const userId = getUserId(); // Call getUserId to get the current user's ID
+    const liked = !hasUserLikedPost(postId, userId); // Toggle like status
+
     const updatedPost = await toggleLikeStatus(postId, userId, liked);
-    const likeBtn = btn.querySelector(".like-btn");
+
+    const postElement = document.querySelector(`[data-post_id="${postId}"]`);
+    if (!postElement) {
+      console.error("Post element not found.");
+      return;
+    }
+
+    const likeBtn = postElement.querySelector(".like-btn");
     const likeCountSpan = likeBtn.querySelector("span");
 
     // Update the UI with the new like count and status
