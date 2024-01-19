@@ -6,6 +6,11 @@ class Session {
     d.setTime(d.getTime() + 2 * 24 * 60 * 60 * 1000);
     let expires = "expires=" + d.toUTCString();
     document.cookie = `user_id=${this.user_id};${expires}`;
+
+    const likedPostsStr = sessionStorage.getItem("likedPosts");
+    if (likedPostsStr) {
+      this.likedPosts = JSON.parse(likedPostsStr);
+    }
   }
 
   getSession() {

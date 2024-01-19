@@ -167,12 +167,23 @@ async function getAllPosts() {
 
     let postWrapper = document.querySelector("#allPostsWrapper");
     postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
+
+    const postElement = document.querySelector(`[data-post_id="${post.id}"]`); // Define postElement
+    const likeBtn = postElement.querySelector(".like-btn");
+    const hasLiked = sessionStorage.getItem(`likedPost_${post.id}`) === "liked";
+    likeBtn.classList.toggle("liked", hasLiked);
   });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   // This code will run after the document is fully loaded
   getAllPosts();
+  const likeBtns = document.querySelectorAll(".like-btn");
+  likeBtns.forEach((btn) => {
+    const postId = btn.closest(".single-post").getAttribute("data-post_id");
+    const hasLiked = sessionStorage.getItem(`likedPost_${postId}`) === "liked";
+    btn.classList.toggle("liked", hasLiked);
+  });
 });
 
 const commentPostSubmit = (e) => {
@@ -212,11 +223,29 @@ const toggleLikeStatus = async (postId, userId, liked) => {
   try {
     const post = new Post();
     const updatedPost = await post.like(postId, userId, liked);
+
+    // Update the session's likedPosts array based on the like status
+    const session = new Session();
+    if (liked) {
+      if (!session.likedPosts.includes(postId)) {
+        session.likedPosts.push(postId);
+      }
+    } else {
+      session.likedPosts = session.likedPosts.filter((id) => id !== postId);
+    }
+
+    // Store the updated likedPosts array back in the session
+    sessionStorage.setItem("likedPosts", JSON.stringify(session.likedPosts));
+
     return updatedPost;
   } catch (error) {
     console.error("Error toggling like status:", error);
     throw error;
   }
+};
+
+const hasUserLikedPost = (post, userId) => {
+  return post.likes && post.likes.includes(userId);
 };
 
 const getUserId = () => {
@@ -234,17 +263,35 @@ const getUserId = () => {
   return "";
 };
 
-const hasUserLikedPost = (post, userId) => {
-  return post.likes && post.likes.includes(userId);
+const fetchPostById = async (postId) => {
+  try {
+    // Replace this with your actual logic to fetch a post by ID from your data source
+    const response = await fetch(`/api/posts/${postId}`); // Assuming you have an API endpoint for fetching posts
+    if (!response.ok) {
+      throw new Error("Failed to fetch post");
+    }
+    const post = await response.json();
+    return post;
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    throw error;
+  }
 };
 
 const likePost = async (btn) => {
   try {
     const postId = btn.closest(".single-post").getAttribute("data-post_id");
     const userId = getUserId(); // Call getUserId to get the current user's ID
-    const liked = !hasUserLikedPost(postId, userId); // Toggle like status
+
+    // Fetch the post object
+    const post = await fetchPostById(postId);
+
+    // Check if the user has liked the post
+    const liked = !hasUserLikedPost(post, userId);
 
     const updatedPost = await toggleLikeStatus(postId, userId, liked);
+
+    sessionStorage.setItem(`likedPost_${postId}`, "liked");
 
     const postElement = document.querySelector(`[data-post_id="${postId}"]`);
     if (!postElement) {
@@ -263,6 +310,7 @@ const likePost = async (btn) => {
   }
 };
 
+// Add event listeners for like buttons
 document.querySelectorAll(".like-btn").forEach((btn) => {
   btn.addEventListener("click", () => likePost(btn));
 });
