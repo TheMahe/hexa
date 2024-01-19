@@ -208,20 +208,57 @@ const RemoveMyPost = (btn) => {
   post.delete(post_id);
 };
 
-const likePost = async (btn) => {
-  let main_post_el = btn.closest(".single-post");
-  let post_id = main_post_el.getAttribute("data-post_id");
+const hasUserLikedPost = (post, userId) => {
+  return post.likes.includes(userId);
+};
 
-  let post = new Post();
+const toggleLikeStatus = async (postId, userId, liked) => {
   try {
-    let updatedPost = await post.like(post_id, session_id);
-    let number_of_likes = parseInt(btn.querySelector("span").innerText);
-    btn.querySelector("span").innerText = updatedPost.likes; // Update the like count in the UI
-    btn.classList.toggle("liked", updatedPost.likedByUser); // Toggle the liked class based on the updated post's state
+    const post = new Post();
+    const updatedPost = await post.like(postId, userId, liked);
+    return updatedPost;
+  } catch (error) {
+    console.error("Error toggling like status:", error);
+    throw error;
+  }
+};
+
+const getUserId = () => {
+  const name = "user_id=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookieArray = decodedCookie.split(";");
+
+  for (let i = 0; i < cookieArray.length; i++) {
+    let cookie = cookieArray[i].trim();
+    if (cookie.indexOf(name) == 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+
+  return "";
+};
+
+const likePost = async (btn) => {
+  const postId = btn.closest(".single-post").getAttribute("data-post_id");
+  const userId = getUserId(); // Call getUserId to get the current user's ID
+  const liked = !hasUserLikedPost(post, userId); // Toggle like status
+
+  try {
+    const updatedPost = await toggleLikeStatus(postId, userId, liked);
+    const likeBtn = btn.querySelector(".like-btn");
+    const likeCountSpan = likeBtn.querySelector("span");
+
+    // Update the UI with the new like count and status
+    likeCountSpan.innerText = updatedPost.likes.length;
+    likeBtn.classList.toggle("liked", liked);
   } catch (error) {
     console.error("Error liking post:", error);
   }
 };
+
+document.querySelectorAll(".like-btn").forEach((btn) => {
+  btn.addEventListener("click", () => likePost(btn));
+});
 
 const commentPost = (btn) => {
   let main_post_el = btn.closest(".single-post");

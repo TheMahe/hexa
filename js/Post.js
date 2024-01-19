@@ -37,22 +37,29 @@ class Post {
     return data;
   }
 
-  async like(post_id, likes) {
-    let data = {
-      likes: likes,
-    };
+  async like(postId, userId, liked) {
+    let post = await this.get(postId);
 
-    data = JSON.stringify(data);
+    if (liked) {
+      // Add user ID to the likes array if not already present
+      if (!post.likes.includes(userId)) {
+        post.likes.push(userId);
+      }
+    } else {
+      // Remove user ID from the likes array
+      post.likes = post.likes.filter((id) => id !== userId);
+    }
 
-    let response = await fetch(this.api_url + "/posts/" + post_id, {
+    // Update the post with the new like status
+    const response = await fetch(`${this.api_url}/posts/${postId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: data,
+      body: JSON.stringify(post),
     });
 
-    let updatedPost = await response.json();
+    const updatedPost = await response.json();
     return updatedPost;
   }
 
