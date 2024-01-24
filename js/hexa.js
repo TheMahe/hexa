@@ -179,13 +179,52 @@ async function getAllPosts() {
 document.addEventListener("DOMContentLoaded", function () {
   // This code will run after the document is fully loaded
   getAllPosts();
+
+  // Update like buttons based on stored liked status
   const likeBtns = document.querySelectorAll(".like-btn");
   likeBtns.forEach((btn) => {
     const postId = btn.closest(".single-post").getAttribute("data-post_id");
     const hasLiked = sessionStorage.getItem(`likedPost_${postId}`) === "liked";
+    const likeCount = sessionStorage.getItem(`likeCount_${postId}`);
+
     btn.classList.toggle("liked", hasLiked);
+    btn.querySelector("span").innerText = likeCount || 0; // Display the like count or default to 0
   });
 });
+
+const likePost = async (btn) => {
+  try {
+    const postId = btn.closest(".single-post").getAttribute("data-post_id");
+    const userId = getUserId(); // Call getUserId to get the current user's ID
+
+    // Fetch the post object
+    const post = await fetchPostById(postId);
+
+    // Check if the user has liked the post
+    const liked = !hasUserLikedPost(post, userId);
+
+    const updatedPost = await toggleLikeStatus(postId, userId, liked);
+
+    // Update session storage with the new like status and count
+    sessionStorage.setItem(`likedPost_${postId}`, liked ? "liked" : "");
+    sessionStorage.setItem(`likeCount_${postId}`, updatedPost.likes.length);
+
+    const postElement = document.querySelector(`[data-post_id="${postId}"]`);
+    if (!postElement) {
+      console.error("Post element not found.");
+      return;
+    }
+
+    const likeBtn = postElement.querySelector(".like-btn");
+    const likeCountSpan = likeBtn.querySelector("span");
+
+    // Update the UI with the new like count and status
+    likeCountSpan.innerText = updatedPost.likes.length;
+    likeBtn.classList.toggle("liked", liked);
+  } catch (error) {
+    console.error("Error liking post:", error);
+  }
+};
 
 const commentPostSubmit = (e) => {
   e.preventDefault();
@@ -287,41 +326,6 @@ const fetchPostById = async (postId) => {
   } catch (error) {
     console.error("Error fetching post:", error);
     throw error;
-  }
-};
-
-// Other functions and code from your hexa.js file...
-
-// Usage of the fetchPostById function in the likePost function
-const likePost = async (btn) => {
-  try {
-    const postId = btn.closest(".single-post").getAttribute("data-post_id");
-    const userId = getUserId(); // Call getUserId to get the current user's ID
-
-    // Fetch the post object
-    const post = await fetchPostById(postId);
-
-    // Check if the user has liked the post
-    const liked = !hasUserLikedPost(post, userId);
-
-    const updatedPost = await toggleLikeStatus(postId, userId, liked);
-
-    sessionStorage.setItem(`likedPost_${postId}`, "liked");
-
-    const postElement = document.querySelector(`[data-post_id="${postId}"]`);
-    if (!postElement) {
-      console.error("Post element not found.");
-      return;
-    }
-
-    const likeBtn = postElement.querySelector(".like-btn");
-    const likeCountSpan = likeBtn.querySelector("span");
-
-    // Update the UI with the new like count and status
-    likeCountSpan.innerText = updatedPost.likes.length;
-    likeBtn.classList.toggle("liked", liked);
-  } catch (error) {
-    console.error("Error liking post:", error);
   }
 };
 
