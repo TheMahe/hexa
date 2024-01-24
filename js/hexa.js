@@ -2,22 +2,40 @@ let session = new Session();
 session_id = session.getSession();
 api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 
+const DEFAULT_PROFILE_IMAGE_URL =
+  "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
+
+async function populateUserData() {
+  let user = new User();
+  user = await user.get(session_id);
+
+  document.querySelector("#username").textContent = user.username;
+  document.querySelector("#email").textContent = user.email;
+
+  const profileImage = document.querySelector(".profile");
+  const profileImageUrl = user.profileImageUrl.trim(); // Trim any leading/trailing spaces
+
+  // Create a new Image element
+  const img = new Image();
+  img.onload = function () {
+    // Set the profile image source once it's loaded
+    profileImage.src = profileImageUrl || DEFAULT_PROFILE_IMAGE_URL;
+  };
+  img.onerror = function () {
+    // If the image fails to load, set a default image
+    profileImage.src = DEFAULT_PROFILE_IMAGE_URL;
+  };
+  img.src = profileImageUrl; // Set the src attribute of the Image element
+  img.alt = "Profile Picture"; // Set alt attribute for accessibility
+
+  document.querySelector("#korisnicko_ime").value = user.username;
+  document.querySelector("#edit_email").value = user.email;
+  document.querySelector("#profileImageUrlInput").value =
+    profileImageUrl || DEFAULT_PROFILE_IMAGE_URL; // Set the default value for the profile image URL input
+}
+
 if (session_id !== "") {
-  async function populateUserData() {
-    let user = new User();
-    user = await user.get(session_id);
-
-    document.querySelector("#username").textContent = user.username;
-    document.querySelector("#email").textContent = user.email;
-    document.querySelector(".profile").src = user.profileImageUrl; // Set the profile image source
-
-    document.querySelector("#korisnicko_ime").value = user.username;
-    document.querySelector("#edit_email").value = user.email;
-    document.querySelector("#profileImageUrlInput").value =
-      user.profileImageUrl;
-  }
-
-  populateUserData();
+  populateUserData(); // Call populateUserData function
 } else {
   window.location.href = "/";
 }
@@ -181,6 +199,8 @@ async function getAllPosts() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  populateUserData();
+
   // This code will run after the document is fully loaded
   getAllPosts();
 
