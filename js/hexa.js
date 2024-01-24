@@ -115,65 +115,69 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
 });
 
 async function getAllPosts() {
-  let all_posts = new Post();
-  all_posts = await all_posts.getAllPosts();
+  try {
+    let all_posts = new Post();
+    all_posts = await all_posts.getAllPosts();
 
-  // Create a new array of promises for the user and comments fetching
-  let promises = all_posts.map(async (post) => {
-    let user = await new User().get(post.user_id);
-    let comments = await new Comment().get(post.id);
-    return { post, user, comments }; // Return an object with all the data needed
-  });
+    for (const post of all_posts) {
+      let user = await new User().get(post.user_id);
+      let comments = await new Comment().get(post.id);
 
-  // Resolve all the promises before proceeding
-  let postsWithUsersAndComments = await Promise.all(promises);
+      // Fetch user info for each comment
+      const commentsWithUserInfo = await Promise.all(
+        comments.map(async (comment) => {
+          const userInfo = await new User().get(comment.user_id);
+          return { comment, userInfo };
+        })
+      );
 
-  // Now you can sort the posts after all promises have been resolved
-  postsWithUsersAndComments.sort((a, b) => {
-    // Assuming post object has a created_at date in ISO format
-    return new Date(b.post.created_at) - new Date(a.post.created_at);
-  });
+      let delete_post_html = "";
+      if (session_id == post.user_id) {
+        delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+      }
 
-  // Now that we have all data and it's sorted, we can render the posts
-  postsWithUsersAndComments.forEach(({ post, user, comments }) => {
-    let delete_post_html = "";
-    if (session_id == post.user_id) {
-      delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
+      // Construct comments HTML with user info
+      const commentsHtml = commentsWithUserInfo
+        .map(
+          ({ comment, userInfo }) =>
+            `<div class="single-comment">
+            <b>${userInfo.username}:</b> ${comment.content}
+           </div>`
+        )
+        .join("");
+
+      // Construct the post HTML
+      let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
+              <div class="post-content">${post.content}</div>
+              <div class="post-actions">
+                  <p><b>Autor:</b> ${user.username}</p>
+                  <div>
+                      <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
+                      <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+                      ${delete_post_html}
+                  </div>
+              </div>
+              <div class="post-comments">
+                  <form>
+                      <input placeholder="Napisi Komentar..." type="text">
+                      <button onclick="commentPostSubmit(event)">Comment</button>
+                  </form>
+                  ${commentsHtml}
+              </div>
+          </div>`;
+
+      let postWrapper = document.querySelector("#allPostsWrapper");
+      postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
+
+      const postElement = document.querySelector(`[data-post_id="${post.id}"]`); // Define postElement
+      const likeBtn = postElement.querySelector(".like-btn");
+      const hasLiked =
+        sessionStorage.getItem(`likedPost_${post.id}`) === "liked";
+      likeBtn.classList.toggle("liked", hasLiked);
     }
-
-    // Construct comments HTML
-    let comments_html = comments
-      .map((comment) => `<div class="single-comment">${comment.content}</div>`)
-      .join("");
-
-    // Construct the post HTML
-    let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
-            <div class="post-content">${post.content}</div>
-            <div class="post-actions">
-                <p><b>Autor:</b> ${user.username}</p>
-                <div>
-                    <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
-                    <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-                    ${delete_post_html}
-                </div>
-            </div>
-            <div class="post-comments">
-                <form>
-                    <input placeholder="Napisi Komentar..." type="text">
-                    <button onclick="commentPostSubmit(event)">Comment</button>
-                </form>
-                ${comments_html}
-            </div>
-        </div>`;
-
-    let postWrapper = document.querySelector("#allPostsWrapper");
-    postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
-
-    const postElement = document.querySelector(`[data-post_id="${post.id}"]`); // Define postElement
-    const likeBtn = postElement.querySelector(".like-btn");
-    const hasLiked = sessionStorage.getItem(`likedPost_${post.id}`) === "liked";
-    likeBtn.classList.toggle("liked", hasLiked);
-  });
+  } catch (error) {
+    console.error("Error fetching and rendering posts:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -226,7 +230,7 @@ const likePost = async (btn) => {
   }
 };
 
-const commentPostSubmit = (e) => {
+const commentPostSubmit = async (e) => {
   e.preventDefault();
 
   let btn = e.target;
@@ -239,15 +243,31 @@ const commentPostSubmit = (e) => {
 
   main_post_el.querySelector("input").value = "";
 
-  main_post_el.querySelector(
-    ".post-comments"
-  ).innerHTML += `<div class="single-comment">${comment_value}</div>`;
-
   let comment = new Comment();
   comment.content = comment_value;
   comment.user_id = session_id;
   comment.post_id = post_id;
-  comment.create();
+
+  try {
+    // Create the comment and get the comment object with user_id
+    comment = await comment.create();
+
+    if (!comment || !comment.user_id) {
+      throw new Error("Failed to create comment or user_id is missing");
+    }
+
+    // Fetch the user information for the comment's user_id
+    const user = await new User().get(comment.user_id);
+
+    // Append the new comment to the post's comments section with user info
+    main_post_el.querySelector(".post-comments").innerHTML += `
+      <div class="single-comment">
+        <b>${user.username}:</b> ${comment.content}
+      </div>
+    `;
+  } catch (error) {
+    console.error("Error creating or displaying comment:", error);
+  }
 };
 
 const RemoveMyPost = (btn) => {
