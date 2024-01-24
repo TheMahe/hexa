@@ -1,5 +1,6 @@
 let session = new Session();
 session_id = session.getSession();
+api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 
 if (session_id !== "") {
   async function populateUserData() {
@@ -226,6 +227,7 @@ const toggleLikeStatus = async (postId, userId, liked) => {
 
     // Update the session's likedPosts array based on the like status
     const session = new Session();
+    session.likedPosts = session.likedPosts || []; // Initialize session.likedPosts if it's undefined
     if (liked) {
       if (!session.likedPosts.includes(postId)) {
         session.likedPosts.push(postId);
@@ -245,7 +247,8 @@ const toggleLikeStatus = async (postId, userId, liked) => {
 };
 
 const hasUserLikedPost = (post, userId) => {
-  return post.likes && post.likes.includes(userId);
+  // Check if post.likes is defined and is an array before using includes
+  return post.likes && Array.isArray(post.likes) && post.likes.includes(userId);
 };
 
 const getUserId = () => {
@@ -263,14 +266,23 @@ const getUserId = () => {
   return "";
 };
 
+// Define the fetchPostById function to handle fetching a post by ID
 const fetchPostById = async (postId) => {
   try {
-    // Replace this with your actual logic to fetch a post by ID from your data source
-    const response = await fetch(`/api/posts/${postId}`); // Assuming you have an API endpoint for fetching posts
+    console.log(`Fetching post with ID: ${postId}`);
+    const response = await fetch(`${this.api_url}/posts/${postId}`);
+    console.log(`Response status: ${response.status}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch post");
+      const errorMessage = await response.text();
+      console.error(
+        `Failed to fetch post: ${response.status} - ${errorMessage}`
+      );
+      throw new Error(
+        `Failed to fetch post: ${response.status} - ${errorMessage}`
+      );
     }
     const post = await response.json();
+    console.log(`Fetched post:`, post);
     return post;
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -278,6 +290,9 @@ const fetchPostById = async (postId) => {
   }
 };
 
+// Other functions and code from your hexa.js file...
+
+// Usage of the fetchPostById function in the likePost function
 const likePost = async (btn) => {
   try {
     const postId = btn.closest(".single-post").getAttribute("data-post_id");
