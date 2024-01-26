@@ -4,9 +4,7 @@ class User {
     this.username = "";
     this.email = "";
     this.password = "";
-    this.profileImageUrl =
-      this.profileImageUrl ||
-      "http://path-to-your-default-image.com/default.jpg";
+    this.profileImageUrl = "";
     this.api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
   }
 
@@ -15,6 +13,8 @@ class User {
       username: this.username,
       email: this.email,
       password: this.password,
+      profileImageUrl:
+        "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
     };
 
     try {
