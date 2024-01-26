@@ -48,34 +48,39 @@ class Post {
   }
 
   async like(postId, userId, liked) {
-    let post = await this.get(postId);
+    try {
+      let post = await this.get(postId);
 
-    // Ensure that post.likes is an array
-    if (!Array.isArray(post.likes)) {
-      post.likes = [];
-    }
-
-    if (liked) {
-      // Add user ID to the likes array if not already present
-      if (!post.likes.includes(userId)) {
-        post.likes.push(userId);
+      // Ensure that post.likes is an array
+      if (!Array.isArray(post.likes)) {
+        post.likes = [];
       }
-    } else {
-      // Remove user ID from the likes array
-      post.likes = post.likes.filter((id) => id !== userId);
+
+      if (liked) {
+        // Add user ID to the likes array if not already present
+        if (!post.likes.includes(userId)) {
+          post.likes.push(userId);
+        }
+      } else {
+        // Remove user ID from the likes array
+        post.likes = post.likes.filter((id) => id !== userId);
+      }
+
+      // Update the post with the new like status
+      const response = await fetch(`${this.api_url}/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(post),
+      });
+
+      const updatedPost = await response.json();
+      return updatedPost;
+    } catch (error) {
+      console.error("Error toggling like status:", error);
+      throw error;
     }
-
-    // Update the post with the new like status
-    const response = await fetch(`${this.api_url}/posts/${postId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(post),
-    });
-
-    const updatedPost = await response.json();
-    return updatedPost;
   }
 
   delete(post_id) {
