@@ -1,10 +1,11 @@
+// Initialize session and API URL
 let session = new Session();
-session_id = session.getSession();
-api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
-
+let session_id = session.getSession();
+let api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 const DEFAULT_PROFILE_IMAGE_URL =
   "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
 
+// Populate user data function
 async function populateUserData() {
   let user = new User();
   user = await user.get(session_id);
@@ -13,33 +14,37 @@ async function populateUserData() {
   document.querySelector("#email").textContent = user.email;
 
   const profileImage = document.querySelector(".profile");
-  const profileImageUrl = user.profileImageUrl.trim(); // Trim any leading/trailing spaces
+  const profileImageUrl = user.profileImageUrl
+    ? user.profileImageUrl.trim()
+    : DEFAULT_PROFILE_IMAGE_URL;
 
-  // Create a new Image element
   const img = new Image();
   img.onload = function () {
-    // Set the profile image source once it's loaded
-    profileImage.src = profileImageUrl || DEFAULT_PROFILE_IMAGE_URL;
+    profileImage.setAttribute(
+      "src",
+      profileImageUrl || DEFAULT_PROFILE_IMAGE_URL
+    );
   };
   img.onerror = function () {
-    // If the image fails to load, set a default image
-    profileImage.src = DEFAULT_PROFILE_IMAGE_URL;
+    profileImage.setAttribute("src", DEFAULT_PROFILE_IMAGE_URL);
   };
-  img.src = profileImageUrl; // Set the src attribute of the Image element
-  img.alt = "Profile Picture"; // Set alt attribute for accessibility
+  img.src = profileImageUrl;
+  img.alt = "Profile Picture";
 
   document.querySelector("#korisnicko_ime").value = user.username;
   document.querySelector("#edit_email").value = user.email;
   document.querySelector("#profileImageUrlInput").value =
-    profileImageUrl || DEFAULT_PROFILE_IMAGE_URL; // Set the default value for the profile image URL input
+    profileImageUrl || DEFAULT_PROFILE_IMAGE_URL;
 }
 
+// Check if session is active and populate user data
 if (session_id !== "") {
-  populateUserData(); // Call populateUserData function
+  populateUserData();
 } else {
   window.location.href = "/";
 }
 
+// Event listener for logout button
 document.querySelector("#logout").addEventListener("click", function (e) {
   e.preventDefault();
   let session = new Session();
@@ -47,11 +52,13 @@ document.querySelector("#logout").addEventListener("click", function (e) {
   window.location.href = "/";
 });
 
+// Event listener for edit account button
 document.querySelector("#editAccount").addEventListener("click", function (e) {
   e.preventDefault();
   document.querySelector(".edit-acc-modal").style.display = "block";
 });
 
+// Event listener for close modal button
 document
   .querySelector("#close-acc-modal")
   .addEventListener("click", function (e) {
@@ -59,55 +66,48 @@ document
     document.querySelector(".edit-acc-modal").style.display = "none";
   });
 
+// Event listener for edit form submission
 document.querySelector("#editForm").addEventListener("submit", function (e) {
   e.preventDefault();
   let user = new User();
   user.username = document.querySelector("#korisnicko_ime").value;
   user.email = document.querySelector("#edit_email").value;
-  user.profileImageUrl = document.getElementById("profileImageUrlInput").value; // Get the new image URL from the form
+  user.profileImageUrl = document.getElementById("profileImageUrlInput").value;
   user.edit();
-
-  // Replace the profile image src with the new image URL
   document.querySelector(".profile").src = user.profileImageUrl;
 });
 
+// Event listener for delete profile button
 document
   .querySelector("#deleteProfile")
   .addEventListener("click", function (e) {
     e.preventDefault();
-
     let text = "Da li ste sigurni da želite da obrišete profil?";
-
     if (confirm(text)) {
       let user = new User(session_id);
       user.delete();
     }
   });
 
+// Event listener for post form submission
 document.querySelector("#postForm").addEventListener("submit", function (e) {
   e.preventDefault();
-
   async function createPost() {
     let content = document.querySelector("#postContent").value;
     document.querySelector("#postContent").value = "";
     let post = new Post();
     post.post_content = content;
     post = await post.create();
-
     let current_user = new User();
     current_user = await current_user.get(session_id);
-
     let html = document.querySelector("#allPostsWrapper").innerHTML;
-
     let delete_post_html = "";
     if (session_id == post.user_id) {
       delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
     }
-
     document.querySelector("#allPostsWrapper").innerHTML =
       `<div class="single-post" data-post_id="${post.id}">
          <div class="post-content">${post.content}</div>
-         
          <div class="post-actions">
          <p><b>Autor:</b> ${current_user.username}</p>
          <div>
@@ -116,22 +116,18 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
              ${delete_post_html}
          </div>
      </div>
-     
-
-         <div class="post-comments">
-         <form>
-           <input placeholder="Napisi Komentar..." type="text">
-           <button onclick="commentPostSubmit(event)">Comment</button>
-         </form>
-      </div>
-        </div>
-        
-        ` + html;
+     <div class="post-comments">
+     <form>
+       <input placeholder="Napisi Komentar..." type="text">
+       <button onclick="commentPostSubmit(event)">Comment</button>
+     </form>
+  </div>
+    </div>` + html;
   }
-
   createPost();
 });
 
+// Function to fetch and render all posts
 async function getAllPosts() {
   try {
     let all_posts = new Post();
@@ -175,80 +171,74 @@ async function getAllPosts() {
                       ${delete_post_html}
                   </div>
               </div>
-              <div class="post-comments">
-                  <form>
-                      <input placeholder="Napisi Komentar..." type="text">
-                      <button onclick="commentPostSubmit(event)">Comment</button>
-                  </form>
-                  ${commentsHtml}
-              </div>
+              <div class="post-comments">${commentsHtml}</div>
           </div>`;
 
-      let postWrapper = document.querySelector("#allPostsWrapper");
-      postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
-
-      const postElement = document.querySelector(`[data-post_id="${post.id}"]`); // Define postElement
-      const likeBtn = postElement.querySelector(".like-btn");
-      const hasLiked =
-        sessionStorage.getItem(`likedPost_${post.id}`) === "liked";
-      likeBtn.classList.toggle("liked", hasLiked);
+      document.querySelector("#allPostsWrapper").innerHTML += newPostHtml;
     }
   } catch (error) {
     console.error("Error fetching and rendering posts:", error);
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  populateUserData();
-
-  // This code will run after the document is fully loaded
-  getAllPosts();
-
-  // Update like buttons based on stored liked status
-  const likeBtns = document.querySelectorAll(".like-btn");
-  likeBtns.forEach((btn) => {
-    const postId = btn.closest(".single-post").getAttribute("data-post_id");
-    const hasLiked = sessionStorage.getItem(`likedPost_${postId}`) === "liked";
-    const likeCount = sessionStorage.getItem(`likeCount_${postId}`);
-
-    btn.classList.toggle("liked", hasLiked);
-    btn.querySelector("span").innerText = likeCount || 0; // Display the like count or default to 0
-  });
-});
-
-const likePost = async (btn) => {
-  try {
-    const postId = btn.closest(".single-post").getAttribute("data-post_id");
-    const userId = getUserId(); // Call getUserId to get the current user's ID
-
-    // Fetch the post object
-    const post = await fetchPostById(postId);
-
-    // Check if the user has liked the post
-    const liked = !hasUserLikedPost(post, userId);
-
-    const updatedPost = await toggleLikeStatus(postId, userId, liked);
-
-    // Update session storage with the new like status and count
-    sessionStorage.setItem(`likedPost_${postId}`, liked ? "liked" : "");
-    sessionStorage.setItem(`likeCount_${postId}`, updatedPost.likes.length);
-
-    const postElement = document.querySelector(`[data-post_id="${postId}"]`);
-    if (!postElement) {
-      console.error("Post element not found.");
-      return;
+// Function to update like buttons based on stored liked status
+function updateLikeButtons() {
+  const likeButtons = document.querySelectorAll(".likePostJS");
+  likeButtons.forEach(async (button) => {
+    const postId = button.closest(".single-post").dataset.post_id;
+    const isLiked = await isPostLiked(postId);
+    if (isLiked) {
+      button.classList.add("liked");
     }
+  });
+}
 
-    const likeBtn = postElement.querySelector(".like-btn");
-    const likeCountSpan = likeBtn.querySelector("span");
+// Function to check if the user has liked a post
+async function isPostLiked(postId) {
+  try {
+    const likedPosts = await new User().getLikedPosts(session_id);
+    return likedPosts.includes(postId);
+  } catch (error) {
+    console.error("Error checking if post is liked:", error);
+    return false;
+  }
+}
 
-    // Update the UI with the new like count and status
-    likeCountSpan.innerText = updatedPost.likes.length;
-    likeBtn.classList.toggle("liked", liked);
+// Function to handle post likes
+async function likePost(element) {
+  try {
+    const postId = element.closest(".single-post").dataset.post_id;
+    const post = await new Post().get(postId);
+    const isLiked = await isPostLiked(postId);
+
+    if (isLiked) {
+      // If already liked, unlike the post
+      await post.unlike(session_id);
+      element.classList.remove("liked");
+      const likesSpan = element.querySelector("span");
+      likesSpan.textContent = parseInt(likesSpan.textContent) - 1;
+    } else {
+      // If not liked, like the post
+      await post.like(session_id);
+      element.classList.add("liked");
+      const likesSpan = element.querySelector("span");
+      likesSpan.textContent = parseInt(likesSpan.textContent) + 1;
+    }
   } catch (error) {
     console.error("Error liking post:", error);
   }
-};
+}
+
+// Function to remove the user's own post
+async function RemoveMyPost(element) {
+  try {
+    const postId = element.closest(".single-post").dataset.post_id;
+    await new Post().remove(postId);
+    element.closest(".single-post").remove();
+  } catch (error) {
+    console.error("Error removing post:", error);
+  }
+}
 
 const commentPostSubmit = async (e) => {
   e.preventDefault();
@@ -290,13 +280,9 @@ const commentPostSubmit = async (e) => {
   }
 };
 
-const RemoveMyPost = (btn) => {
-  let post_id = btn.closest(".single-post").getAttribute("data-post_id");
-
-  btn.closest(".single-post").remove();
-
-  let post = new Post();
-  post.delete(post_id);
+window.onload = async function () {
+  await getAllPosts();
+  updateLikeButtons();
 };
 
 const toggleLikeStatus = async (postId, userId, liked) => {
