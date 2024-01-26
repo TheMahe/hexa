@@ -8,6 +8,13 @@ const DEFAULT_PROFILE_IMAGE_URL =
 async function populateUserData() {
   let user = new User();
   user = await user.get(session_id);
+  // Clear user's liked posts when a new user is created
+  sessionStorage.removeItem("likedPosts");
+
+  // Reset like buttons for all posts to remove the "liked" class
+  document.querySelectorAll(".like-btn").forEach((btn) => {
+    btn.classList.remove("liked");
+  });
 
   document.querySelector("#username").textContent = user.username;
   document.querySelector("#email").textContent = user.email;
@@ -88,6 +95,8 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   async function createPost() {
+    sessionStorage.removeItem(`likedPost_${post.id}`);
+
     let content = document.querySelector("#postContent").value;
     document.querySelector("#postContent").value = "";
     let post = new Post();
@@ -166,43 +175,43 @@ async function getAllPosts() {
 
       // Construct the post HTML
       let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
-              <div class="post-content">${post.content}</div>
-              <div class="post-actions">
-                  <p><b>Autor:</b> ${user.username}</p>
-                  <div>
-                      <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
-                      <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-                      ${delete_post_html}
-                  </div>
-              </div>
-              <div class="post-comments">
-                  <form>
-                      <input placeholder="Napisi Komentar..." type="text">
-                      <button onclick="commentPostSubmit(event)">Comment</button>
-                  </form>
-                  ${commentsHtml}
-              </div>
-          </div>`;
+      <div class="post-content">${post.content}</div>
+      <div class="post-actions">
+          <p><b>Autor:</b> ${user.username}</p>
+          <div>
+              <button onclick="likePost(this)" class="likePostJS like-btn" data-post_id="${post.id}"><span>${post.likes.length}</span> Likes</button>
+              <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+              ${delete_post_html}
+          </div>
+      </div>
+      <div class="post-comments">
+          <form>
+              <input placeholder="Napisi Komentar..." type="text">
+              <button onclick="commentPostSubmit(event)">Comment</button>
+          </form>
+          ${commentsHtml}
+      </div>
+  </div>`;
 
       let postWrapper = document.querySelector("#allPostsWrapper");
       postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
 
-      const postElement = document.querySelector(`[data-post_id="${post.id}"]`); // Define postElement
-      const likeBtn = postElement.querySelector(".like-btn");
-      const hasLiked =
-        sessionStorage.getItem(`likedPost_${post.id}`) === "liked";
-      likeBtn.classList.toggle("liked", hasLiked);
+      const likeBtn = document.querySelector(
+        `.like-btn[data-post_id="${post.id}"]`
+      );
+      const hasLiked = await hasUserLikedPost(post, session_id); // Check if the current user has liked this post
+      likeBtn.classList.toggle("liked", hasLiked); // Add or remove the "liked" class based on the liked status
     }
   } catch (error) {
     console.error("Error fetching and rendering posts:", error);
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   populateUserData();
 
   // This code will run after the document is fully loaded
-  getAllPosts();
+  await getAllPosts();
 
   // Update like buttons based on stored liked status
   const likeBtns = document.querySelectorAll(".like-btn");
