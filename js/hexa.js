@@ -348,9 +348,7 @@ const getUserId = () => {
 // Define the fetchPostById function to handle fetching a post by ID
 const fetchPostById = async (postId) => {
   try {
-    console.log(`Fetching post with ID: ${postId}`);
     const response = await fetch(`${this.api_url}/posts/${postId}`);
-    console.log(`Response status: ${response.status}`);
     if (!response.ok) {
       const errorMessage = await response.text();
       console.error(
@@ -361,7 +359,6 @@ const fetchPostById = async (postId) => {
       );
     }
     const post = await response.json();
-    console.log(`Fetched post:`, post);
     return post;
   } catch (error) {
     console.error("Error fetching post:", error);
