@@ -169,9 +169,32 @@ async function getAllPosts() {
           ({ comment, userInfo }) =>
             `<div class="single-comment">
             <b>${userInfo.username}:</b> ${comment.content}
-           </div>`
+            <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
+            </div>`
         )
         .join("");
+
+      main_post_el.querySelector(".post-comments").innerHTML = commentsHtml;
+
+      // Add event listeners for delete buttons on comments
+      main_post_el
+        .querySelectorAll(".delete-comment-btn")
+        .forEach((deleteBtn) => {
+          deleteBtn.addEventListener("click", async () => {
+            const commentId = deleteBtn.getAttribute("data-comment-id");
+            try {
+              // Call your delete comment function passing the commentId
+              const deleted = await deleteComment(commentId);
+              if (deleted) {
+                // If the comment is successfully deleted, remove it from the UI
+                deleteBtn.closest(".single-comment").remove();
+              }
+            } catch (error) {
+              console.error("Error deleting comment:", error);
+              // Handle the error (e.g., show an error message to the user)
+            }
+          });
+        });
 
       // Construct the post HTML
       let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
@@ -392,5 +415,16 @@ const commentPost = (btn) => {
     commentsSection.style.display = "block";
   } else {
     commentsSection.style.display = "none";
+  }
+};
+
+const deleteComment = async (commentId) => {
+  try {
+    const comment = new Comment();
+    const deleted = await comment.delete(commentId);
+    return deleted; // Return true if deletion is successful
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    throw error; // Throw an error if deletion fails
   }
 };
