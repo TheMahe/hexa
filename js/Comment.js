@@ -34,6 +34,23 @@ class Comment {
     }
   }
 
+  async delete(commentId) {
+    try {
+      const response = await fetch(`${this.api_url}/comments/${commentId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete comment with ID ${commentId}`);
+      }
+
+      return true; // Return true if the deletion is successful
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      throw error;
+    }
+  }
+
   async get(post_id) {
     let api_url = this.api_url + "/comments";
 

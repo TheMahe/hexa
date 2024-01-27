@@ -30,6 +30,7 @@ class User {
 
       const session = new Session();
       session.user_id = responseData.id;
+      sessionStorage.removeItem("likedPosts");
       session.startSession();
       window.location.href = "hexa.html";
     } catch (error) {
