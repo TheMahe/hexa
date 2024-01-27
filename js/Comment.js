@@ -36,18 +36,29 @@ class Comment {
 
   async delete(commentId) {
     try {
-      const response = await fetch(`${this.api_url}/comments/${commentId}`, {
+      const response = await fetch(`${api_url}/comments/${commentId}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any required headers (e.g., authorization token) here
+        },
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to delete comment with ID ${commentId}`);
+        // Handle non-200 status codes
+        const errorMessage = await response.text();
+        console.error(
+          `Failed to delete comment: ${response.status} - ${errorMessage}`
+        );
+        return false;
       }
 
-      return true; // Return true if the deletion is successful
+      // Comment deleted successfully
+      return true;
     } catch (error) {
+      // Handle network errors or exceptions
       console.error("Error deleting comment:", error);
-      throw error;
+      return false;
     }
   }
 

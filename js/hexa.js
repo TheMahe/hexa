@@ -174,52 +174,31 @@ async function getAllPosts() {
         )
         .join("");
 
-      main_post_el.querySelector(".post-comments").innerHTML = commentsHtml;
-
-      // Add event listeners for delete buttons on comments
-      main_post_el
-        .querySelectorAll(".delete-comment-btn")
-        .forEach((deleteBtn) => {
-          deleteBtn.addEventListener("click", async () => {
-            const commentId = deleteBtn.getAttribute("data-comment-id");
-            try {
-              // Call your delete comment function passing the commentId
-              const deleted = await deleteComment(commentId);
-              if (deleted) {
-                // If the comment is successfully deleted, remove it from the UI
-                deleteBtn.closest(".single-comment").remove();
-              }
-            } catch (error) {
-              console.error("Error deleting comment:", error);
-              // Handle the error (e.g., show an error message to the user)
-            }
-          });
-        });
-
-      // Construct the post HTML
-      let newPostHtml = `<div class="single-post" data-post_id="${post.id}">
-      <div class="post-content">${post.content}</div>
-      <div class="post-actions">
+      // Define main_post_el within the loop
+      let main_post_el = document.createElement("div");
+      main_post_el.classList.add("single-post");
+      main_post_el.setAttribute("data-post_id", post.id);
+      main_post_el.innerHTML = `<div class="post-content">${post.content}</div>
+        <div class="post-actions">
           <p><b>Autor:</b> ${user.username}</p>
           <div>
-              <button onclick="likePost(this)" class="likePostJS like-btn" data-post_id="${post.id}"><span>${post.likes.length}</span> Likes</button>
-              <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-              ${delete_post_html}
+            <button onclick="likePost(this)" class="likePostJS like-btn" data-post_id="${post.id}"><span>${post.likes.length}</span> Likes</button>
+            <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+            ${delete_post_html}
           </div>
-      </div>
-      <div class="post-comments">
+        </div>
+        <div class="post-comments">
           <form>
-              <input placeholder="Napisi Komentar..." type="text">
-              <button onclick="commentPostSubmit(event)">Comment</button>
+            <input placeholder="Napisi Komentar..." type="text">
+            <button onclick="commentPostSubmit(event)">Comment</button>
           </form>
           ${commentsHtml}
-      </div>
-  </div>`;
+        </div>`;
 
       let postWrapper = document.querySelector("#allPostsWrapper");
-      postWrapper.insertAdjacentHTML("afterbegin", newPostHtml);
+      postWrapper.insertAdjacentElement("afterbegin", main_post_el);
 
-      const likeBtn = document.querySelector(
+      const likeBtn = main_post_el.querySelector(
         `.like-btn[data-post_id="${post.id}"]`
       );
       const hasLiked = await hasUserLikedPost(post, session_id); // Check if the current user has liked this post
@@ -315,12 +294,34 @@ const commentPostSubmit = async (e) => {
     main_post_el.querySelector(".post-comments").innerHTML += `
       <div class="single-comment">
         <b>${user.username}:</b> ${comment.content}
+        <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
       </div>
     `;
   } catch (error) {
     console.error("Error creating or displaying comment:", error);
   }
 };
+
+// Add event listener for delete buttons within the post-comments section
+document.querySelectorAll(".single-post").forEach((post) => {
+  post.querySelector(".post-comments").addEventListener("click", async (e) => {
+    if (e.target.classList.contains("delete-comment-btn")) {
+      const commentId = e.target.getAttribute("data-comment-id");
+      try {
+        // Call deleteComment function and handle the result
+        const deleted = await deleteComment(commentId);
+        if (deleted) {
+          // Remove the deleted comment from the UI
+          e.target.closest(".single-comment").remove();
+        } else {
+          console.error("Failed to delete comment.");
+        }
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+      }
+    }
+  });
+});
 
 const RemoveMyPost = (btn) => {
   let post_id = btn.closest(".single-post").getAttribute("data-post_id");
@@ -418,6 +419,7 @@ const commentPost = (btn) => {
   }
 };
 
+// Modify the deleteComment function to handle deleting comments
 const deleteComment = async (commentId) => {
   try {
     const comment = new Comment();
@@ -428,3 +430,24 @@ const deleteComment = async (commentId) => {
     throw error; // Throw an error if deletion fails
   }
 };
+
+// Add event listener for delete buttons within the post-comments section
+document.querySelectorAll(".post-comments").forEach((commentsSection) => {
+  commentsSection.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("delete-comment-btn")) {
+      const commentId = e.target.getAttribute("data-comment-id");
+      try {
+        // Call deleteComment function and handle the result
+        const deleted = await deleteComment(commentId);
+        if (deleted) {
+          // Remove the deleted comment from the UI
+          e.target.closest(".single-comment").remove();
+        } else {
+          console.error("Failed to delete comment.");
+        }
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+      }
+    }
+  });
+});
