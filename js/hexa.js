@@ -302,10 +302,11 @@ const commentPostSubmit = async (e) => {
   }
 };
 
-// Add event listener for delete buttons within the post-comments section
-document.querySelectorAll(".single-post").forEach((post) => {
-  post.querySelector(".post-comments").addEventListener("click", async (e) => {
-    if (e.target.classList.contains("delete-comment-btn")) {
+// Add event listener for delete buttons within the single-comment section
+document.querySelectorAll(".single-comment").forEach((comment) => {
+  comment
+    .querySelector(".delete-comment-btn")
+    .addEventListener("click", async (e) => {
       const commentId = e.target.getAttribute("data-comment-id");
       try {
         // Call deleteComment function and handle the result
@@ -319,8 +320,7 @@ document.querySelectorAll(".single-post").forEach((post) => {
       } catch (error) {
         console.error("Error deleting comment:", error);
       }
-    }
-  });
+    });
 });
 
 const RemoveMyPost = (btn) => {
@@ -404,6 +404,11 @@ document.querySelectorAll(".like-btn").forEach((btn) => {
   btn.addEventListener("click", () => likePost(btn));
 });
 
+// Add event listeners for like buttons
+document.querySelectorAll(".like-btn").forEach((btn) => {
+  btn.addEventListener("click", () => likePost(btn));
+});
+
 const commentPost = (btn) => {
   let main_post_el = btn.closest(".single-post");
   let post_id = main_post_el.getAttribute("data-post_id");
@@ -431,23 +436,4 @@ const deleteComment = async (commentId) => {
   }
 };
 
-// Add event listener for delete buttons within the post-comments section
-document.querySelectorAll(".post-comments").forEach((commentsSection) => {
-  commentsSection.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("delete-comment-btn")) {
-      const commentId = e.target.getAttribute("data-comment-id");
-      try {
-        // Call deleteComment function and handle the result
-        const deleted = await deleteComment(commentId);
-        if (deleted) {
-          // Remove the deleted comment from the UI
-          e.target.closest(".single-comment").remove();
-        } else {
-          console.error("Failed to delete comment.");
-        }
-      } catch (error) {
-        console.error("Error deleting comment:", error);
-      }
-    }
-  });
-});
+const currentUserId = getUserId();

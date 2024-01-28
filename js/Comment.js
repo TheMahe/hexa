@@ -34,9 +34,9 @@ class Comment {
     }
   }
 
-  async delete(commentId) {
+  async delete(commentId, userId) {
     try {
-      const response = await fetch(`${api_url}/comments/${commentId}`, {
+      const response = await fetch(`${this.api_url}/comments/${commentId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
