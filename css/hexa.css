@@ -201,7 +201,6 @@ body {
 }
 
 #allPostsWrapper .single-post {
-  background-color: #eaeaea;
   padding: 15px;
   margin-top: 15px;
   color: var(--light-orange);
@@ -281,7 +280,6 @@ body {
 }
 
 #allPostsWrapper .single-post .post-actions div button.remove-btn {
-  border-color: red;
   color: red;
   padding: 5px 15px;
   background: rgba(114, 114, 114, 0.2);
@@ -296,8 +294,48 @@ body {
   display: none;
 }
 
+#allPostsWrapper .single-post .post-comments form input {
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+    color: var(--white);
+
+}
+
+
+
 #allPostsWrapper .single-post .post-comments .single-comment {
   border: 1px dotted var(--light-orange);
   padding: 10px;
   margin-top: 10px;
 }
+
+#allPostsWrapper .single-post .post-comments .single-comment {
+  /* existing styles */
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+
+#allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn {
+  color: var(--light-orange);
+  float: right;
+  cursor: pointer;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  padding: 5px 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+}
+
+#allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn:hover {
+  background: rgba(114, 114, 114, 0.4);
+  color: var(--white);
+}
+
