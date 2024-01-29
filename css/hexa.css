@@ -307,10 +307,21 @@ body {
 
 
 #allPostsWrapper .single-post .post-comments .single-comment {
-  border: 1px dotted var(--light-orange);
+  border: 1px solid var(--light-orange);
   padding: 10px;
   margin-top: 10px;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 10px;
+  color: var(--light-orange);
+  font-size: 16px;
+  line-height: 1.5;
+  position: relative;
 }
+
+
 
 #allPostsWrapper .single-post .post-comments .single-comment {
   /* existing styles */
@@ -321,7 +332,8 @@ body {
 
 #allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn {
   color: var(--light-orange);
-  float: right;
+  position: absolute;
+  right: 5px;
   cursor: pointer;
   background: rgba(114, 114, 114, 0.2);
   backdrop-filter: blur(10px);
