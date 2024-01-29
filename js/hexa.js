@@ -437,3 +437,24 @@ const deleteComment = async (commentId) => {
 };
 
 const currentUserId = getUserId();
+
+// Add event listener to the parent element
+document.querySelector("#allPostsWrapper").addEventListener("click", async function(e) {
+  // Check if the clicked element or its parent is a delete comment button
+  const deleteButton = e.target.closest(".delete-comment-btn");
+  if (!deleteButton) return;
+
+  const commentId = deleteButton.getAttribute("data-comment-id");
+  try {
+    // Call deleteComment function and handle the result
+    const deleted = await deleteComment(commentId);
+    if (deleted) {
+      // Remove the deleted comment from the UI
+      deleteButton.closest(".single-comment").remove();
+    } else {
+      console.error("Failed to delete comment.");
+    }
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+  }
+});
