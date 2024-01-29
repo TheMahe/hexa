@@ -438,7 +438,7 @@ const deleteComment = async (commentId) => {
 
 const currentUserId = getUserId();
 
-// Add event listener to the parent element
+// Adding event listener to the parent element
 document.querySelector("#allPostsWrapper").addEventListener("click", async function(e) {
   // Check if the clicked element or its parent is a delete comment button
   const deleteButton = e.target.closest(".delete-comment-btn");
