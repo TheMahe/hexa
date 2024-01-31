@@ -141,6 +141,7 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
 
   createPost();
 });
+
 async function getAllPosts() {
   try {
     let all_posts = new Post();
@@ -152,10 +153,10 @@ async function getAllPosts() {
 
       // Fetch user info for each comment
       const commentsWithUserInfo = await Promise.all(
-        comments.map(async (comment) => {
-          const userInfo = await new User().get(comment.user_id);
-          return { comment, userInfo };
-        })
+          comments.map(async (comment) => {
+            const userInfo = await new User().get(comment.user_id);
+            return { comment, userInfo };
+          })
       );
 
       let delete_post_html = "";
@@ -165,14 +166,11 @@ async function getAllPosts() {
 
       // Construct comments HTML with user info
       const commentsHtml = commentsWithUserInfo
-        .map(
-          ({ comment, userInfo }) =>
-            `<div class="single-comment">
-            <b>${userInfo.username}:</b> ${comment.content}
-            <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
-            </div>`
-        )
-        .join("");
+          .map(
+              ({ comment, userInfo }) =>
+                  [...]
+          )
+          .join("");
 
       // Define main_post_el within the loop
       let main_post_el = document.createElement("div");
@@ -181,15 +179,14 @@ async function getAllPosts() {
       main_post_el.innerHTML = `<div class="post-content">${post.content}</div>
         <div class="post-actions">
           <p><b>Autor:</b> ${user.username}</p>
+          <img src="${user.profileImageUrl}" alt="Profile Image" class="profile-image">
           <div>
-            <button onclick="likePost(this)" class="likePostJS like-btn" data-post_id="${post.id}"><span>${post.likes.length}</span> Likes</button>
-            <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-            ${delete_post_html}
+            [...]
           </div>
         </div>
         <div class="post-comments">
           <form>
-            <input placeholder="Napisi Komentar..." type="text">
+            [...]
             <button onclick="commentPostSubmit(event)">Comment</button>
           </form>
           ${commentsHtml}
@@ -199,7 +196,7 @@ async function getAllPosts() {
       postWrapper.insertAdjacentElement("afterbegin", main_post_el);
 
       const likeBtn = main_post_el.querySelector(
-        `.like-btn[data-post_id="${post.id}"]`
+          `.like-btn[data-post_id="${post.id}"]`
       );
       const hasLiked = await hasUserLikedPost(post, session_id); // Check if the current user has liked this post
       likeBtn.classList.toggle("liked", hasLiked); // Add or remove the "liked" class based on the liked status
