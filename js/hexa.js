@@ -114,18 +114,19 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
     }
 
     document.querySelector("#allPostsWrapper").innerHTML =
-      `<div class="single-post" data-post_id="${post.id}">
+        `<div class="single-post" data-post_id="${post.id}">
          <div class="post-content">${post.content}</div>
-         
+
          <div class="post-actions">
          <p><b>Autor:</b> ${current_user.username}</p>
+         <img src="${current_user.profileImageUrl}" alt="Profile Image" class="profile-image">
          <div>
          <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
          <button class="comment-btn" onclick="commentPost(this)">Comments</button>
              ${delete_post_html}
          </div>
      </div>
-     
+
 
          <div class="post-comments">
          <form>
@@ -134,13 +135,12 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
          </form>
       </div>
         </div>
-        
+
         ` + html;
   }
 
   createPost();
 });
-
 async function getAllPosts() {
   try {
     let all_posts = new Post();
