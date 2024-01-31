@@ -95,13 +95,15 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   async function createPost() {
-    sessionStorage.removeItem(`likedPost_${post.id}`);
 
     let content = document.querySelector("#postContent").value;
     document.querySelector("#postContent").value = "";
     let post = new Post();
     post.post_content = content;
     post = await post.create();
+
+    sessionStorage.removeItem(`likedPost_${post.id}`);
+
 
     let current_user = new User();
     current_user = await current_user.get(session_id);
@@ -164,11 +166,13 @@ async function getAllPosts() {
         delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
       }
 
-      // Construct comments HTML with user info
       const commentsHtml = commentsWithUserInfo
           .map(
               ({ comment, userInfo }) =>
-                  [...]
+                  `<div class="single-comment">
+                <p><b>${userInfo.username}</b>: ${comment.content}</p>
+                <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
+             </div>`
           )
           .join("");
 
