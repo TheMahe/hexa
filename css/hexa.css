@@ -355,5 +355,14 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  float: left;
+  position: absolute;
+}
+
+#allPostsWrapper .single-post .post-actions p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: var(--light-orange);
+  margin-left: 6%;
 }
 
