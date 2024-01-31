@@ -185,12 +185,14 @@ async function getAllPosts() {
           <p><b>Autor:</b> ${user.username}</p>
           <img src="${user.profileImageUrl}" alt="Profile Image" class="profile-image">
           <div>
-            [...]
+            <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
+            <button class="comment-btn" onclick="commentPost(this)">Comments</button>
+            ${delete_post_html}
           </div>
         </div>
         <div class="post-comments">
           <form>
-            [...]
+            <input placeholder="Napisi Komentar..." type="text">
             <button onclick="commentPostSubmit(event)">Comment</button>
           </form>
           ${commentsHtml}
@@ -198,12 +200,6 @@ async function getAllPosts() {
 
       let postWrapper = document.querySelector("#allPostsWrapper");
       postWrapper.insertAdjacentElement("afterbegin", main_post_el);
-
-      const likeBtn = main_post_el.querySelector(
-          `.like-btn[data-post_id="${post.id}"]`
-      );
-      const hasLiked = await hasUserLikedPost(post, session_id); // Check if the current user has liked this post
-      likeBtn.classList.toggle("liked", hasLiked); // Add or remove the "liked" class based on the liked status
     }
   } catch (error) {
     console.error("Error fetching and rendering posts:", error);
