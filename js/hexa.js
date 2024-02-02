@@ -1,6 +1,8 @@
+import { User } from './User.js';
+
 let session = new Session();
-session_id = session.getSession();
-api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
+let session_id = session.getSession();
+let api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 
 const DEFAULT_PROFILE_IMAGE_URL =
   "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";

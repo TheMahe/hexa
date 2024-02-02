@@ -1,4 +1,3 @@
-import { storage } from './firebase';
 
 
 class User {
@@ -139,3 +138,5 @@ class User {
     }
   }
 }
+
+export { User };

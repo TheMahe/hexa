@@ -91,10 +91,15 @@
       <button id="deleteProfile">OBRISI PROFIL</button>
     </div>
 
-    <script src="./js/Session.js"></script>
-    <script src="./js/User.js"></script>
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
+    <!-- Add the Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script src="./js/firebase.js"></script>    <script src="./js/Session.js"></script>
+    <script type="module" src="./js/User.js"></script>
     <script src="./js/Comment.js"></script>
     <script src="./js/Post.js"></script>
-    <script src="./js/hexa.js"></script>
-  </body>
+    <script type="module" src="./js/hexa.js"></script>  </body>
 </html>
