@@ -328,6 +328,7 @@ body {
   display: flex;
   justify-content: stretch;
   align-items: center;
+  gap: 5px;
 }
 
 #allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn {
