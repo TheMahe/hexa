@@ -1,11 +1,9 @@
-import { User } from './User.js';
-
 let session = new Session();
-let session_id = session.getSession();
-let api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
+session_id = session.getSession();
+api_url = "https://659c3020d565feee2dac9c63.mockapi.io";
 
 const DEFAULT_PROFILE_IMAGE_URL =
-  "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
+    "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg";
 
 async function populateUserData() {
   let user = new User();
@@ -40,7 +38,7 @@ async function populateUserData() {
   document.querySelector("#korisnicko_ime").value = user.username;
   document.querySelector("#edit_email").value = user.email;
   document.querySelector("#profileImageUrlInput").value =
-    profileImageUrl || DEFAULT_PROFILE_IMAGE_URL; // Set the default value for the profile image URL input
+      profileImageUrl || DEFAULT_PROFILE_IMAGE_URL; // Set the default value for the profile image URL input
 }
 
 if (session_id !== "") {
@@ -62,11 +60,11 @@ document.querySelector("#editAccount").addEventListener("click", function (e) {
 });
 
 document
-  .querySelector("#close-acc-modal")
-  .addEventListener("click", function (e) {
-    e.preventDefault();
-    document.querySelector(".edit-acc-modal").style.display = "none";
-  });
+    .querySelector("#close-acc-modal")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+      document.querySelector(".edit-acc-modal").style.display = "none";
+    });
 
 document.querySelector("#editForm").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -81,17 +79,17 @@ document.querySelector("#editForm").addEventListener("submit", function (e) {
 });
 
 document
-  .querySelector("#deleteProfile")
-  .addEventListener("click", function (e) {
-    e.preventDefault();
+    .querySelector("#deleteProfile")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
 
-    let text = "Da li ste sigurni da želite da obrišete profil?";
+      let text = "Da li ste sigurni da želite da obrišete profil?";
 
-    if (confirm(text)) {
-      let user = new User(session_id);
-      user.delete();
-    }
-  });
+      if (confirm(text)) {
+        let user = new User(session_id);
+        user.delete();
+      }
+    });
 
 document.querySelector("#postForm").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -178,6 +176,9 @@ async function getAllPosts() {
           )
           .join("");
 
+      // Check if the current user has liked the post
+      const hasLiked = post.likes.includes(session_id);
+
       // Define main_post_el within the loop
       let main_post_el = document.createElement("div");
       main_post_el.classList.add("single-post");
@@ -187,7 +188,7 @@ async function getAllPosts() {
           <p><b>Autor:</b> ${user.username}</p>
           <img src="${user.profileImageUrl}" alt="Profile Image" class="profile-image">
           <div>
-            <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
+            <button onclick="likePost(this)" class="likePostJS like-btn ${hasLiked ? 'liked' : ''}"><span>${post.likes.length}</span> Likes</button>
             <button class="comment-btn" onclick="commentPost(this)">Comments</button>
             ${delete_post_html}
           </div>
@@ -207,7 +208,6 @@ async function getAllPosts() {
     console.error("Error fetching and rendering posts:", error);
   }
 }
-
 document.addEventListener("DOMContentLoaded", async function () {
   populateUserData();
 
@@ -304,22 +304,22 @@ const commentPostSubmit = async (e) => {
 // Add event listener for delete buttons within the single-comment section
 document.querySelectorAll(".single-comment").forEach((comment) => {
   comment
-    .querySelector(".delete-comment-btn")
-    .addEventListener("click", async (e) => {
-      const commentId = e.target.getAttribute("data-comment-id");
-      try {
-        // Call deleteComment function and handle the result
-        const deleted = await deleteComment(commentId);
-        if (deleted) {
-          // Remove the deleted comment from the UI
-          e.target.closest(".single-comment").remove();
-        } else {
-          console.error("Failed to delete comment.");
+      .querySelector(".delete-comment-btn")
+      .addEventListener("click", async (e) => {
+        const commentId = e.target.getAttribute("data-comment-id");
+        try {
+          // Call deleteComment function and handle the result
+          const deleted = await deleteComment(commentId);
+          if (deleted) {
+            // Remove the deleted comment from the UI
+            e.target.closest(".single-comment").remove();
+          } else {
+            console.error("Failed to delete comment.");
+          }
+        } catch (error) {
+          console.error("Error deleting comment:", error);
         }
-      } catch (error) {
-        console.error("Error deleting comment:", error);
-      }
-    });
+      });
 });
 
 const RemoveMyPost = (btn) => {
@@ -384,10 +384,10 @@ const fetchPostById = async (postId) => {
     if (!response.ok) {
       const errorMessage = await response.text();
       console.error(
-        `Failed to fetch post: ${response.status} - ${errorMessage}`
+          `Failed to fetch post: ${response.status} - ${errorMessage}`
       );
       throw new Error(
-        `Failed to fetch post: ${response.status} - ${errorMessage}`
+          `Failed to fetch post: ${response.status} - ${errorMessage}`
       );
     }
     const post = await response.json();
@@ -414,8 +414,8 @@ const commentPost = (btn) => {
   let commentsSection = main_post_el.querySelector(".post-comments");
 
   if (
-    commentsSection.style.display === "none" ||
-    commentsSection.style.display === ""
+      commentsSection.style.display === "none" ||
+      commentsSection.style.display === ""
   ) {
     commentsSection.style.display = "block";
   } else {

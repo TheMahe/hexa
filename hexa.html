@@ -1,105 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/hexa.css" />
-    <link rel="icon" href="./assets/img/favicon.png" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/hexa.css" />
+  <link rel="icon" href="./assets/img/favicon.png" />
+  <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+  <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous"
+  />
 
-    <title>Hexa</title>
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="inner-container left-side">
-            <img
-              src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
-              class="profile"
-              alt=""
-            />
-            <p><b id="username"></b></p>
-            <p id="email"></p>
+  <title>Hexa</title>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="inner-container left-side">
+        <img
+                src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+                class="profile"
+                alt=""
+        />
+        <p><b id="username"></b></p>
+        <p id="email"></p>
 
-            <button id="editAccount">Izmijeni nalog</button>
-            <button id="logout">Odjavi se</button>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <div class="inner-container right-side">
-            <form id="postForm">
-              <textarea
-                id="postContent"
-                placeholder="Napisi nesto i objavi"
-              ></textarea>
-              <button>Objavi</button>
-            </form>
-
-            <div id="allPostsWrapper"></div>
-          </div>
-        </div>
+        <button id="editAccount">Izmijeni nalog</button>
+        <button id="logout">Odjavi se</button>
       </div>
     </div>
+    <div class="col-md-9">
+      <div class="inner-container right-side">
+        <form id="postForm">
+              <textarea
+                      id="postContent"
+                      placeholder="Napisi nesto i objavi"
+              ></textarea>
+          <button>Objavi</button>
+        </form>
 
-    <div class="edit-acc-modal">
-      <a id="close-acc-modal">X</a>
+        <div id="allPostsWrapper"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      <form action="" id="editForm">
-        <h2>Izmijeni svoj profil</h2>
+<div class="edit-acc-modal">
+  <a id="close-acc-modal">X</a>
 
-        <div>
-          <label for="edit_image">Profile Image: *</label>
-          <input type="file" id="profileImageInput" accept="image/*" />
-        </div>
+  <form action="" id="editForm">
+    <h2>Izmijeni svoj profil</h2>
 
-        <div>
-          <label for="username">username: *</label>
-          <input
-            type="text"
-            id="korisnicko_ime"
-            name="korisnicko_ime"
-            placeholder="john.morgan"
-          />
-        </div>
-
-        <div>
-          <label for="edit_email">email adress: *</label>
-          <input
-            type="email"
-            id="edit_email"
-            name="register_email"
-            placeholder="john.morgan@gmail.com"
-          />
-        </div>
-        <div>
-          <button>Izmijeni</button>
-        </div>
-      </form>
-
-      <hr />
-
-      <button id="deleteProfile">OBRISI PROFIL</button>
+    <div>
+      <label for="edit_image">Profile Image URL: *</label>
+      <input
+              type="url"
+              id="profileImageUrlInput"
+              placeholder="Enter profile image URL"
+      />
     </div>
 
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <div>
+      <label for="username">username: *</label>
+      <input
+              type="text"
+              id="korisnicko_ime"
+              name="korisnicko_ime"
+              placeholder="john.morgan"
+      />
+    </div>
 
-    <!-- Add the Firebase products that you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <div>
+      <label for="edit_email">email adress: *</label>
+      <input
+              type="email"
+              id="edit_email"
+              name="register_email"
+              placeholder="john.morgan@gmail.com"
+      />
+    </div>
+    <div>
+      <button>Izmijeni</button>
+    </div>
+  </form>
 
-    <script src="./js/firebase.js"></script>    <script src="./js/Session.js"></script>
-    <script type="module" src="./js/User.js"></script>
-    <script src="./js/Comment.js"></script>
-    <script src="./js/Post.js"></script>
-    <script type="module" src="./js/hexa.js"></script>  </body>
+  <hr />
+
+  <button id="deleteProfile">OBRISI PROFIL</button>
+</div>
+
+<script src="./js/Session.js"></script>
+<script src="./js/User.js"></script>
+<script src="./js/Comment.js"></script>
+<script src="./js/Post.js"></script>
+<script src="./js/hexa.js"></script>
+</body>
 </html>
