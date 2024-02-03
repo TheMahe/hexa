@@ -229,37 +229,25 @@ document.addEventListener("DOMContentLoaded", async function () {
 const likePost = async (btn) => {
   try {
     const postId = btn.closest(".single-post").getAttribute("data-post_id");
-    const userId = getUserId(); // Call getUserId to get the current user's ID
+    const userId = session_id; // Get the current user's ID
 
     // Fetch the post object
-    const post = await fetchPostById(postId);
+    const post = new Post();
+    const postData = await post.get(postId);
 
     // Check if the user has liked the post
-    const liked = !hasUserLikedPost(post, userId);
+    const liked = postData.likes.includes(userId);
 
-    const updatedPost = await toggleLikeStatus(postId, userId, liked);
-
-    // Update session storage with the new like status and count
-    sessionStorage.setItem(`likedPost_${postId}`, liked ? "liked" : "");
-    sessionStorage.setItem(`likeCount_${postId}`, updatedPost.likes.length);
-
-    const postElement = document.querySelector(`[data-post_id="${postId}"]`);
-    if (!postElement) {
-      console.error("Post element not found.");
-      return;
-    }
-
-    const likeBtn = postElement.querySelector(".like-btn");
-    const likeCountSpan = likeBtn.querySelector("span");
+    // Toggle the like status
+    const updatedPost = await post.like(postId, userId, !liked);
 
     // Update the UI with the new like count and status
-    likeCountSpan.innerText = updatedPost.likes.length;
-    likeBtn.classList.toggle("liked", liked);
+    btn.querySelector("span").innerText = updatedPost.likes.length;
+    btn.classList.toggle("liked", !liked);
   } catch (error) {
     console.error("Error liking post:", error);
   }
 };
-
 const commentPostSubmit = async (e) => {
   e.preventDefault();
 

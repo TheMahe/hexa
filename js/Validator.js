@@ -3,7 +3,7 @@ class Validator {
 		this.elementsConfig = config;
 		this.formID = formID;
 		this.errors = {};
-		
+
 		this.generateErrorsObject();
 		this.inputListener();
 	}
@@ -35,25 +35,25 @@ class Validator {
 
 		if(elFields[fieldName].required) {
 			if(fieldValue === '') {
-				this.errors[fieldName].push('Polje je prazno');
+				this.errors[fieldName].push('Field is empty');
 			}
 		}
 
 		if(elFields[fieldName].email) {
 			if(!this.validateEmail(fieldValue)) {
-				this.errors[fieldName].push('Neispravna email adresa');
+				this.errors[fieldName].push('Invalid email address');
 			}
 		}
 
 		if(fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
-			this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`);
+			this.errors[fieldName].push(`Field must have a minimum of ${elFields[fieldName].minlength} and a maximum of ${elFields[fieldName].maxlength} characters`);
 		}
 
 		if(elFields[fieldName].matching) {
 			let matchingEl = document.querySelector(`${this.formID} input[name="${elFields[fieldName].matching}"]`);
 
 			if(fieldValue !== matchingEl.value) {
-				this.errors[fieldName].push('Lozinke se ne poklapaju');
+				this.errors[fieldName].push('Passwords do not match');
 			}
 
 			if(this.errors[fieldName].length === 0) {
@@ -96,9 +96,9 @@ class Validator {
 
 	validateEmail(email) {
 		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-	    	return true;
+			return true;
 		}
-	    
-	    return false;
+
+		return false;
 	}
 }
