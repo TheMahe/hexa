@@ -32,6 +32,7 @@ class Validator {
 		let fieldValue = field.value;
 
 		this.errors[fieldName] = [];
+		this.clearErrors(fieldName);
 
 		if(elFields[fieldName].required) {
 			if(fieldValue === '') {
@@ -75,11 +76,15 @@ class Validator {
 		return true;
 	}
 
-	populateErrors(errors) {
-		for(const elem of document.querySelectorAll('ul')) {
-			elem.remove();
+	clearErrors(fieldName) {
+		let parentElement = document.querySelector(`${this.formID} input[name="${fieldName}"]`).parentElement;
+		let errorsElement = parentElement.querySelector('ul');
+		if (errorsElement) {
+			errorsElement.remove();
 		}
+	}
 
+	populateErrors(errors) {
 		for(let key of Object.keys(errors)) {
 			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
 			let errorsElement = document.createElement('ul');
@@ -95,10 +100,7 @@ class Validator {
 	}
 
 	validateEmail(email) {
-		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-			return true;
-		}
-
-		return false;
+		let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		return emailRegex.test(email);
 	}
 }
