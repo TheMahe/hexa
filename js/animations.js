@@ -40,7 +40,7 @@ const note = document.querySelector('.note');
 gsap.set('.feather', {scale: 0, transformOrigin: "center"});
 
 function homeClickHandler() {
-    gsap.fromTo(homeSvg, {scale: 1}, {scale: 0.9, yoyp: true, repeat:1});
+    gsap.fromTo(homeSvg, {scale: 1}, {scale: 0.9, yoyo: true, repeat:1});
     gsap.fromTo(feather, {y:-5, scale:0}, {y:20, scale:1.5, duration: 1, stagger: 0.2});
     gsap.fromTo(rightFeather, {x: 0}, {x: 5});
 }
