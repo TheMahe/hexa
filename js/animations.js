@@ -1,3 +1,28 @@
+/*
+# Documentation for `animations.js`
+
+## Overview
+The `animations.js` file contains JavaScript code that uses the GSAP (GreenSock Animation Platform) library to animate various elements on a webpage. The animations are triggered by click events on specific elements.
+
+## Variables
+The file declares several variables that reference DOM elements. These elements are the targets of the animations. The variables include `home`, `notifications`, `messages`, `homeSvg`, `feather`, `rightFeather`, `bell`, `ringer`, `wave`, `messagesSvg`, `flap`, and `note`.
+
+## GSAP Timeline
+A GSAP timeline `tl` is created with default settings for duration and easing. This timeline is used to sequence animations for the `messages` click event.
+
+## Click Event Handlers
+Three functions are defined to handle click events: `homeClickHandler`, `notificationsClickHandler`, and `messagesClickHandler`. Each function triggers a series of animations on specific elements.
+
+- `homeClickHandler`: This function scales the `homeSvg` element and animates the `feather` and `rightFeather` elements.
+- `notificationsClickHandler`: This function rotates the `bell` and `ringer` elements and scales the `wave` element.
+- `messagesClickHandler`: This function scales the `messagesSvg` element, flips the `flap` element, moves and fades out the `note` element, and then resets the `flap` element.
+
+## Event Listeners
+Event listeners are added to the `home`, `notifications`, and `messages` elements. When these elements are clicked, the corresponding handler functions are called, triggering the animations.
+
+ */
+
+
 const tl = gsap.timeline({defaults: {duration: 0.35, ease: "Power2.easeOut"}});
 const home = document.querySelector(".home");
 const notifications = document.querySelector('.notifications');
