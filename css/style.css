@@ -6,7 +6,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: __inter_Fallback_20b187,ui-sans-serif,system-ui,-apple-system,"system-ui",Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
-   scroll-behavior: smooth;
 }
 
 :root {
@@ -49,21 +48,21 @@ header .responsive_menu {
 header .responsive_menu ul li {
     list-style-type: none;
     margin: 0 1rem;
-    
-  }
 
-    header .responsive_menu ul li a {
-        text-decoration: none;
-        color: var(--white);
-        font-weight: 500;
-        font-size: 2rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        padding-bottom: 1rem;
+}
 
-    }
+header .responsive_menu ul li a {
+    text-decoration: none;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 1rem;
+
+}
 
 header {
     max-width: 50rem;
@@ -78,30 +77,30 @@ header {
     padding-top: 10px;
     z-index: 999;
 
-  
+
 }
 
 nav {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        padding: 1rem 0;
-        margin-top: 1rem;
-        background: rgba(114,114,114,.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid #404040b5;
-        box-shadow: 0 2px 10px #0000001a;
-        border-radius: 2rem;
-        z-index: 999;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1rem 0;
+    margin-top: 1rem;
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    border-radius: 2rem;
+    z-index: 999;
 
-        
+
 }
 
 .nav__logo {
-   display: flex;
-   justify-content: center;
-   align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .nav__logo img {
@@ -142,7 +141,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     height: 100vh;
-    
+
 }
 
 .hero-img {
@@ -163,24 +162,24 @@ nav {
     justify-content: center;
     align-items: center;
     z-index: 20;
-  }
-  
-  .hero .cta-text {
+}
+
+.hero .cta-text {
     display: flex;
-   font-size: 4rem;
-   overflow: hidden;
+    font-size: 4rem;
+    overflow: hidden;
     font-weight: 500;
     z-index: 20;
-  }
-  
-  .hero .cta-text span {
+}
+
+.hero .cta-text span {
     padding: 0 0.4rem;
-    
+
     text-shadow: rgba(0, 0, 0, 0.4) 0px 0px 20px;
     display: block; /* we need to change span to displaye:blobk in order to use gsap */
     z-index: 20;
-  }
- 
+}
+
 
 .hero .hero-title .title__second {
     font-size: 2rem;
@@ -203,7 +202,7 @@ nav {
     gap: 1rem;
     z-index: 2;
 }
-  
+
 .hero .hero-btn a {
     padding: 0.75rem 1.25rem; /* py-3 px-5 */
     background-color: var(--light-orange); /* bg-indigo-500 */
@@ -213,11 +212,11 @@ nav {
     border-radius: 0.375rem; /* rounded-md */
     box-shadow: 0 1px 3px 0 rgba(102, 126, 234, 0.5), 0 1px 2px 0 rgba(102, 126, 234, 0.06); /* shadow-lg and shadow-indigo-500/50 */
     outline: none; /* focus:out     
-    transition: all 0.15s ease; /* transition duration-150 ease-in-out */        
+    transition: all 0.15s ease; /* transition duration-150 ease-in-out */
     text-decoration: none   ;
     transition: .2s all ease-in-out;
-   z-index: 20;
- }
+    z-index: 20;
+}
 
 .hero .hero-btn a:hover {
     background-color: var(--dark-orange); /* bg-indigo-600 */
@@ -254,7 +253,7 @@ nav {
     justify-content: center;
     align-items: center;
     background: rgba(114,114,114,.2);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
     box-shadow: 0 2px 10px #0000001a;
@@ -308,7 +307,7 @@ nav {
 
 .blog .card {
     background: rgba(114,114,114,.2);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
     box-shadow: 0 2px 10px #0000001a;
@@ -356,15 +355,15 @@ nav {
 
 .notification-svg, .messages-svg {
     overflow: visible;
-  } 
+}
 
 footer {
     margin-top: 5rem;
-}  
+}
 
 footer .row1 {
     background: rgba(114,114,114,.2);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid #404040b5;
     box-shadow: 0 2px 10px #0000001a;
@@ -449,7 +448,7 @@ article {
 }
 
 article .article__header {
-    
+
 }
 
 article .article__header h1 {
@@ -535,18 +534,18 @@ article .cta-p span {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 40rem;
-    z-index: 100; 
+    z-index: 100;
 }
 
 #loginForm h2 {
     background: var(--text-gradient-white);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-     padding-top: 0;
-     color: var(--light-orange);
+    padding-top: 0;
+    color: var(--light-orange);
 }
 
- #closeModal {
+#closeModal {
     height: 1.2rem;
     width: 1.2rem;
     color: var(--white);
@@ -562,16 +561,16 @@ article .cta-p span {
 }
 
 #loginForm div{
-  padding: 1rem 0;
+    padding: 1rem 0;
 }
 
 #loginForm div label{
-  display: block;
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--white);
-  margin-bottom: .5rem;
-  color: var(--light-orange);
+    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: .5rem;
+    color: var(--light-orange);
 }
 
 #loginForm div input{
@@ -589,7 +588,7 @@ article .cta-p span {
 
 
 #loginForm div button {
-    
+
     cursor: pointer;
     padding: .7rem 3rem;
     font-size: 1.2rem;
@@ -623,38 +622,38 @@ article .cta-p span {
     background: var(--text-gradient-white);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-     padding-top: 0;
-     color: var(--light-orange);
+    padding-top: 0;
+    color: var(--light-orange);
 }
 
 .custom-modal div{
-  padding: 1rem 0;
+    padding: 1rem 0;
 }
 
 .custom-modal div label{
-  display: block;
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--white);
-  margin-bottom: .5rem;
-  color: var(--light-orange);
+    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: .5rem;
+    color: var(--light-orange);
 }
 
 .custom-modal div input{
-  height: 4rem;
-  width: 100%;
-  font-size: 18px;
-  padding: 0 .6rem;
-  background: rgba(114,114,114,.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid #404040b5;
-  box-shadow: 0 2px 10px #0000001a;
-  color: var(--light-orange);
+    height: 4rem;
+    width: 100%;
+    font-size: 18px;
+    padding: 0 .6rem;
+    background: rgba(114,114,114,.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #404040b5;
+    box-shadow: 0 2px 10px #0000001a;
+    color: var(--light-orange);
 }
 
 .custom-modal div button {
-  
+
     cursor: pointer;
     padding: .7rem 3rem;
     font-size: 1.2rem;
@@ -664,7 +663,7 @@ article .cta-p span {
     border: 1px solid var(--light-orange);
     box-shadow: 0 2px 10px #0000001a;
     color: var(--light-orange);
-} 
+}
 
 .custom-modal #closeModal {
     height: 1.2rem;
@@ -837,39 +836,39 @@ form ul li {
     display: inline-block;
     cursor: pointer;
     display: none;
-  }
-  
-  .bar1, .bar2, .bar3 {
+}
+
+.bar1, .bar2, .bar3 {
     width: 35px;
     height: 5px;
     background-color: #fff;
     margin: 6px 0;
     transition: 0.4s;
-  }
-  
-  /* Rotate first bar */
-  .change .bar1 {
+}
+
+/* Rotate first bar */
+.change .bar1 {
     transform: translate(0, 11px) rotate(-45deg);
-  }
-  
-  /* Fade out the second bar */
-  .change .bar2 {opacity: 0;}
-  
-  /* Rotate last bar */
-  .change .bar3 {
+}
+
+/* Fade out the second bar */
+.change .bar2 {opacity: 0;}
+
+/* Rotate last bar */
+.change .bar3 {
     transform: translate(0, -11px) rotate(45deg);
-  }
+}
 
 
-  @media only screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     .burger {
-      display: block;
+        display: block;
     }
     .nav__list {
-      display: none;
+        display: none;
     }
     .nav__list.active {
-      display: block;
+        display: block;
     }
 
     .nav_menu {
@@ -879,7 +878,7 @@ form ul li {
     .about-box {
         flex-direction: column;
         max-width: 30rem;
-    margin: 0 auto;
+        margin: 0 auto;
     }
 
     .section-text p {
@@ -892,21 +891,21 @@ form ul li {
 
     .hero .cta-text  {
         font-size: 2rem;
-    
+
     }
 
     .hero .hero-title .title__second {
         font-size: 1.5rem;
-    
+
     }
 
 
-footer .row1 h2 {
-    font-size: 1rem;
-  }
+    footer .row1 h2 {
+        font-size: 1rem;
+    }
 
-  header {
-    max-width: 30rem;
-  }
+    header {
+        max-width: 30rem;
+    }
 
 }

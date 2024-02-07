@@ -21,30 +21,16 @@ body {
   color: var(--white) !important;
 }
 
-.inner-container,
-.edit-acc-modal div input,
-#allPostsWrapper .single-post .post-comments form input,
-.edit-acc-modal div button,
-#editAccount,
-#logout,
-#deleteProfile,
-#allPostsWrapper .single-post .post-actions div button.like-btn,
-#allPostsWrapper .single-post .post-actions div button.comment-btn,
-#allPostsWrapper .single-post .post-actions div button.remove-btn,
-#allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn {
+.inner-container {
+  border: 1px solid var(--dark-orange);
+  padding: 15px;
+  margin-top: 30px;
+  border-radius: 20px;
   background: rgba(114, 114, 114, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid #404040b5;
   box-shadow: 0 2px 10px #0000001a;
-}
-
-.inner-container,
-.edit-acc-modal {
-  border: 1px solid var(--dark-orange);
-  padding: 15px;
-  margin-top: 30px;
-  border-radius: 20px;
 }
 
 .inner-container.left-side {
@@ -66,8 +52,7 @@ body {
   height: 100px;
 }
 
-.inner-container.right-side form textarea,
-#allPostsWrapper .single-post .post-comments form input {
+.inner-container.right-side form textarea {
   width: 85%;
   border: 0;
   padding: 10px;
@@ -76,12 +61,18 @@ body {
   border-radius: 10px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
   color: var(--light-orange);
 }
 
 .inner-container.right-side form button {
   width: 15%;
   border: 0;
+  background: rgba(114, 114, 114, 0.2);
   cursor: pointer;
   border-radius: 10px;
   color: var(--light-orange) !important;
@@ -101,12 +92,23 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
+  background: rgba(33, 37, 41, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 20px !important;
   color: var(--light-orange);
 }
 
-.edit-acc-modal a,
+.edit-acc-modal a {
+  cursor: pointer;
+  color: var(--light-orange);
+}
+
 .edit-acc-modal h2 {
   color: var(--light-orange);
+  padding-top: 0;
 }
 
 .edit-acc-modal div {
@@ -126,6 +128,11 @@ body {
   width: 100%;
   font-size: 18px;
   padding: 0 0.6rem;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
   color: var(--light-orange);
   border-radius: 10px;
 }
@@ -134,6 +141,11 @@ body {
   cursor: pointer;
   padding: 0.7rem 3rem;
   font-size: 1.2rem;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--light-orange);
+  box-shadow: 0 2px 10px #0000001a;
   color: var(--light-orange);
 }
 
@@ -157,16 +169,46 @@ body {
   font-size: 20px;
 }
 
-#editAccount,
-#logout,
-#deleteProfile {
+#editAccount {
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  color: var(--light-orange);
   padding: 5px 15px;
+}
+
+#logout {
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  color: var(--light-orange);
+  padding: 5px 15px;
+}
+
+#deleteProfile {
+  border: 2px solid red;
+  color: red;
+  padding: 5px 15px;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
 }
 
 #allPostsWrapper .single-post {
   padding: 15px;
   margin-top: 15px;
   color: var(--light-orange);
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
   border-radius: 20px !important;
 }
 
@@ -182,13 +224,111 @@ body {
   margin-top: 15px;
 }
 
+#allPostsWrapper .single-post .post-comments form input {
+  width: 85%;
+  padding: 0 10px;
+}
+
+#allPostsWrapper .single-post .post-comments form button {
+  width: 15%;
+  background-color: grey;
+}
+
+#allPostsWrapper .single-post .post-content {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+#allPostsWrapper .single-post .post-actions {
+  display: flex;
+  justify-content: space-between;
+  color: grey;
+}
+
+#allPostsWrapper .single-post .post-actions div button.like-btn {
+  background-image: url(../assets/img/heart.svg);
+  padding: 5px 15px 5px 40px;
+  background-repeat: no-repeat;
+  background-position: 10px;
+  border: 0;
+  background-color: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 20px !important;
+}
+
+#allPostsWrapper .single-post .post-actions div button.like-btn.liked {
+  background-image: url(../assets/img/heart-fill.svg);
+}
+
+#allPostsWrapper .single-post .post-actions div button.comment-btn {
+  background-image: url(../assets/img/comment.png);
+  background-color: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 20px !important;
+  padding: 5px 15px 5px 40px;
+  background-repeat: no-repeat;
+  background-position: 10px;
+  border: 0;
+}
+
+#allPostsWrapper .single-post .post-actions div button.remove-btn {
+  color: red;
+  padding: 5px 15px;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 20px !important;
+}
+
+#allPostsWrapper .single-post .post-comments {
+  display: none;
+}
+
+#allPostsWrapper .single-post .post-comments form input {
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
+  color: var(--white);
+
+}
+
+
+
 #allPostsWrapper .single-post .post-comments .single-comment {
   border: 1px solid var(--light-orange);
   padding: 10px;
   margin-top: 10px;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px #0000001a;
+  border-radius: 10px;
+  color: var(--light-orange);
   font-size: 16px;
   line-height: 1.5;
   position: relative;
+}
+
+
+
+#allPostsWrapper .single-post .post-comments .single-comment {
+  /* existing styles */
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  gap: 5px;
 }
 
 #allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn {
@@ -196,9 +336,15 @@ body {
   position: absolute;
   right: 5px;
   cursor: pointer;
+  background: rgba(114, 114, 114, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #404040b5;
+  box-shadow: 0 2px 10px #0000001a;
   padding: 5px 10px;
   border-radius: 10px;
   transition: all 0.3s ease;
+
 }
 
 #allPostsWrapper .single-post .post-comments .single-comment .delete-comment-btn:hover {
