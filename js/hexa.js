@@ -8,13 +8,6 @@ const DEFAULT_PROFILE_IMAGE_URL =
 async function populateUserData() {
   let user = new User();
   user = await user.get(session_id);
-  // Clear user's liked posts when a new user is created
-  sessionStorage.removeItem("likedPosts");
-
-  // Reset like buttons for all posts to remove the "liked" class
-  document.querySelectorAll(".like-btn").forEach((btn) => {
-    btn.classList.remove("liked");
-  });
 
   document.querySelector("#username").textContent = user.username;
   document.querySelector("#email").textContent = user.email;
@@ -144,53 +137,92 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
   createPost();
 });
 
+// Fetch all users and comments at once
+const fetchAllUsersAndComments = async () => {
+  const users = await new User().getAll();
+  const comments = await new Comment().getAll();
+
+  // Convert the arrays to objects for faster lookup
+  const usersById = users.reduce((obj, user) => ({ ...obj, [user.id]: user }), {});
+  const commentsByPostId = comments.reduce((obj, comment) => {
+    if (!obj[comment.post_id]) {
+      obj[comment.post_id] = [];
+    }
+    obj[comment.post_id].push(comment);
+    return obj;
+  }, {});
+
+  return { usersById, commentsByPostId };
+};
+
+// Fetch all posts at once
+const fetchAllPosts = async () => {
+  const posts = await new Post().getAll();
+  return posts;
+};
+
+// Use event delegation to handle like and delete comment events
+document.querySelector("#allPostsWrapper").addEventListener("click", async function(e) {
+  // Handle like event
+  if (e.target.matches(".like-btn")) {
+    const btn = e.target;
+    likePost(btn);
+  }
+
+  // Handle delete comment event
+  if (e.target.matches(".delete-comment-btn")) {
+    const commentId = e.target.getAttribute("data-comment-id");
+    const deleted = await deleteComment(commentId);
+    if (deleted) {
+      e.target.closest(".single-comment").remove();
+    } else {
+      console.error("Failed to delete comment.");
+    }
+  }
+});
+
+// Clear sessionStorage when a new user logs in
+if (session_id !== "" && session_id !== sessionStorage.getItem("lastSessionId")) {
+  sessionStorage.clear();
+  sessionStorage.setItem("lastSessionId", session_id);
+}
+
+// Optimize getAllPosts function
 async function getAllPosts() {
   try {
-    let all_posts = new Post();
-    all_posts = await all_posts.getAllPosts();
+    const { usersById, commentsByPostId } = await fetchAllUsersAndComments();
+    const all_posts = await fetchAllPosts();
+
+    let html = "";
 
     for (const post of all_posts) {
-      let user = await new User().get(post.user_id);
-      let comments = await new Comment().get(post.id);
+      const user = usersById[post.user_id];
+      const comments = commentsByPostId[post.id] || [];
 
       // Fetch user info for each comment
-      const commentsWithUserInfo = await Promise.all(
-          comments.map(async (comment) => {
-            const userInfo = await new User().get(comment.user_id);
-            return { comment, userInfo };
-          })
-      );
-
-      let delete_post_html = "";
-      if (session_id == post.user_id) {
-        delete_post_html = `<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>`;
-      }
-
-      const commentsHtml = commentsWithUserInfo
-          .map(
-              ({ comment, userInfo }) =>
-                  `<div class="single-comment">
-                <p><b>${userInfo.username}</b>: ${comment.content}</p>
-                <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
-             </div>`
-          )
-          .join("");
+      const commentsHtml = comments
+        .map(
+          (comment) =>
+            `<div class="single-comment">
+              <p><b>${usersById[comment.user_id].username}</b>: ${comment.content}</p>
+              <button class="delete-comment-btn" data-comment-id="${comment.id}">Delete</button>
+            </div>`
+        )
+        .join("");
 
       // Check if the current user has liked the post
-      const hasLiked = post.likes.includes(session_id);
+      const hasLiked = Array.isArray(post.likes) && post.likes.includes(session_id);
 
       // Define main_post_el within the loop
-      let main_post_el = document.createElement("div");
-      main_post_el.classList.add("single-post");
-      main_post_el.setAttribute("data-post_id", post.id);
-      main_post_el.innerHTML = `<div class="post-content">${post.content}</div>
+      html += `<div class="single-post" data-post_id="${post.id}">
+        <div class="post-content">${post.content}</div>
         <div class="post-actions">
           <p><b>Autor:</b> ${user.username}</p>
           <img src="${user.profileImageUrl}" alt="Profile Image" class="profile-image">
           <div>
             <button onclick="likePost(this)" class="likePostJS like-btn ${hasLiked ? 'liked' : ''}"><span>${post.likes.length}</span> Likes</button>
             <button class="comment-btn" onclick="commentPost(this)">Comments</button>
-            ${delete_post_html}
+            ${session_id == post.user_id ? '<button class="remove-btn" onclick="RemoveMyPost(this)">Remove</button>' : ''}
           </div>
         </div>
         <div class="post-comments">
@@ -199,15 +231,16 @@ async function getAllPosts() {
             <button onclick="commentPostSubmit(event)">Comment</button>
           </form>
           ${commentsHtml}
-        </div>`;
-
-      let postWrapper = document.querySelector("#allPostsWrapper");
-      postWrapper.insertAdjacentElement("afterbegin", main_post_el);
+        </div>
+      </div>`;
     }
+
+    document.querySelector("#allPostsWrapper").innerHTML = html;
   } catch (error) {
     console.error("Error fetching and rendering posts:", error);
   }
 }
+
 document.addEventListener("DOMContentLoaded", async function () {
   populateUserData();
 
@@ -236,7 +269,7 @@ const likePost = async (btn) => {
     const postData = await post.get(postId);
 
     // Check if the user has liked the post
-    const liked = postData.likes.includes(userId);
+    const liked = Array.isArray(postData.likes) && postData.likes.includes(userId);
 
     // Toggle the like status
     const updatedPost = await post.like(postId, userId, !liked);
@@ -248,6 +281,7 @@ const likePost = async (btn) => {
     console.error("Error liking post:", error);
   }
 };
+
 const commentPostSubmit = async (e) => {
   e.preventDefault();
 
@@ -289,27 +323,6 @@ const commentPostSubmit = async (e) => {
   }
 };
 
-// Add event listener for delete buttons within the single-comment section
-document.querySelectorAll(".single-comment").forEach((comment) => {
-  comment
-      .querySelector(".delete-comment-btn")
-      .addEventListener("click", async (e) => {
-        const commentId = e.target.getAttribute("data-comment-id");
-        try {
-          // Call deleteComment function and handle the result
-          const deleted = await deleteComment(commentId);
-          if (deleted) {
-            // Remove the deleted comment from the UI
-            e.target.closest(".single-comment").remove();
-          } else {
-            console.error("Failed to delete comment.");
-          }
-        } catch (error) {
-          console.error("Error deleting comment:", error);
-        }
-      });
-});
-
 const RemoveMyPost = (btn) => {
   let post_id = btn.closest(".single-post").getAttribute("data-post_id");
 
@@ -318,83 +331,6 @@ const RemoveMyPost = (btn) => {
   let post = new Post();
   post.delete(post_id);
 };
-
-const toggleLikeStatus = async (postId, userId, liked) => {
-  try {
-    const post = new Post();
-    const updatedPost = await post.like(postId, userId, liked);
-
-    // Update the session's likedPosts array based on the like status
-    const session = new Session();
-    session.likedPosts = session.likedPosts || []; // Initialize session.likedPosts if it's undefined
-    if (liked) {
-      if (!session.likedPosts.includes(postId)) {
-        session.likedPosts.push(postId);
-      }
-    } else {
-      session.likedPosts = session.likedPosts.filter((id) => id !== postId);
-    }
-
-    // Store the updated likedPosts array back in the session
-    sessionStorage.setItem("likedPosts", JSON.stringify(session.likedPosts));
-
-    return updatedPost;
-  } catch (error) {
-    console.error("Error toggling like status:", error);
-    throw error;
-  }
-};
-
-const hasUserLikedPost = (post, userId) => {
-  // Check if post.likes is defined and is an array before using includes
-  return post.likes && Array.isArray(post.likes) && post.likes.includes(userId);
-};
-
-const getUserId = () => {
-  const name = "user_id=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const cookieArray = decodedCookie.split(";");
-
-  for (let i = 0; i < cookieArray.length; i++) {
-    let cookie = cookieArray[i].trim();
-    if (cookie.indexOf(name) == 0) {
-      return cookie.substring(name.length, cookie.length);
-    }
-  }
-
-  return "";
-};
-
-// Define the fetchPostById function to handle fetching a post by ID
-const fetchPostById = async (postId) => {
-  try {
-    const response = await fetch(`${this.api_url}/posts/${postId}`);
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      console.error(
-          `Failed to fetch post: ${response.status} - ${errorMessage}`
-      );
-      throw new Error(
-          `Failed to fetch post: ${response.status} - ${errorMessage}`
-      );
-    }
-    const post = await response.json();
-    return post;
-  } catch (error) {
-    console.error("Error fetching post:", error);
-    throw error;
-  }
-};
-
-// Add event listeners for like buttons
-document.querySelectorAll(".like-btn").forEach((btn) => {
-  btn.addEventListener("click", () => likePost(btn));
-});
-
-// Add event listeners for like buttons
-document.querySelectorAll(".like-btn").forEach((btn) => {
-  btn.addEventListener("click", () => likePost(btn));
-});
 
 const commentPost = (btn) => {
   let main_post_el = btn.closest(".single-post");
@@ -422,26 +358,3 @@ const deleteComment = async (commentId) => {
     throw error; // Throw an error if deletion fails
   }
 };
-
-const currentUserId = getUserId();
-
-// Adding event listener to the parent element
-document.querySelector("#allPostsWrapper").addEventListener("click", async function(e) {
-  // Check if the clicked element or its parent is a delete comment button
-  const deleteButton = e.target.closest(".delete-comment-btn");
-  if (!deleteButton) return;
-
-  const commentId = deleteButton.getAttribute("data-comment-id");
-  try {
-    // Call deleteComment function and handle the result
-    const deleted = await deleteComment(commentId);
-    if (deleted) {
-      // Remove the deleted comment from the UI
-      deleteButton.closest(".single-comment").remove();
-    } else {
-      console.error("Failed to delete comment.");
-    }
-  } catch (error) {
-    console.error("Error deleting comment:", error);
-  }
-});

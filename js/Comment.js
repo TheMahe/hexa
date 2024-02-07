@@ -34,6 +34,19 @@ class Comment {
     }
   }
 
+  async getAll() {
+    const api_url = `${this.api_url}/comments`;
+
+    try {
+      const response = await fetch(api_url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching all comments:", error);
+      throw error;
+    }
+  }
+
   async delete(commentId, userId) {
     try {
       const response = await fetch(`${this.api_url}/comments/${commentId}`, {

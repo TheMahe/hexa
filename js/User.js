@@ -38,6 +38,21 @@ class User {
     }
   }
 
+  async getAll() {
+    const api_url = `${this.api_url}/users`;
+
+    try {
+      const response = await fetch(api_url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching all users:", error);
+      throw error;
+    }
+  }
+
+
+
   async get(user_id) {
     const api_url = `${this.api_url}/users/${user_id}`;
 

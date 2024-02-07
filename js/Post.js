@@ -14,7 +14,22 @@ class Post {
     const response = await fetch(`${this.api_url}/posts/${postId}`);
     const postData = await response.json();
     return postData;
+
   }
+
+  async getAll() {
+    const api_url = `${this.api_url}/posts`;
+
+    try {
+      const response = await fetch(api_url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching all posts:", error);
+      throw error;
+    }
+  }
+
 
   async create() {
     let session = new Session();
