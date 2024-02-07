@@ -76,7 +76,7 @@ document
     .addEventListener("click", function (e) {
       e.preventDefault();
 
-      let text = "Da li ste sigurni da želite da obrišete profil?";
+      let text = "Are you sure you want to delete your account?";
 
       if (confirm(text)) {
         let user = new User(session_id);
@@ -125,7 +125,7 @@ document.querySelector("#postForm").addEventListener("submit", function (e) {
 
          <div class="post-comments">
          <form>
-           <input placeholder="Napisi Komentar..." type="text">
+           <input placeholder="Create comment..." type="text">
            <button onclick="commentPostSubmit(event)">Comment</button>
          </form>
       </div>
@@ -227,7 +227,7 @@ async function getAllPosts() {
         </div>
         <div class="post-comments">
           <form>
-            <input placeholder="Napisi Komentar..." type="text">
+            <input placeholder="Create comment..." type="text">
             <button onclick="commentPostSubmit(event)">Comment</button>
           </form>
           ${commentsHtml}
