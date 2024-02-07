@@ -6,6 +6,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: __inter_Fallback_20b187,ui-sans-serif,system-ui,-apple-system,"system-ui",Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+   scroll-behavior: smooth;
 }
 
 :root {
