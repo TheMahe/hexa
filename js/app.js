@@ -57,6 +57,6 @@ document
       user.password = document.querySelector("#register_password").value;
       user.create();
     } else {
-      alert("Polja nisu dobro popunjena");
+      alert("Form is not valid!");
     }
   });

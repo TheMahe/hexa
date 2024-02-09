@@ -32,29 +32,28 @@ class Validator {
 		let fieldValue = field.value;
 
 		this.errors[fieldName] = [];
-		this.clearErrors(fieldName);
 
 		if(elFields[fieldName].required) {
 			if(fieldValue === '') {
-				this.errors[fieldName].push('Field is empty');
+				this.errors[fieldName].push('Polje je prazno');
 			}
 		}
 
 		if(elFields[fieldName].email) {
 			if(!this.validateEmail(fieldValue)) {
-				this.errors[fieldName].push('Invalid email address');
+				this.errors[fieldName].push('Neispravna email adresa');
 			}
 		}
 
 		if(fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
-			this.errors[fieldName].push(`Field must have a minimum of ${elFields[fieldName].minlength} and a maximum of ${elFields[fieldName].maxlength} characters`);
+			this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`);
 		}
 
 		if(elFields[fieldName].matching) {
 			let matchingEl = document.querySelector(`${this.formID} input[name="${elFields[fieldName].matching}"]`);
 
 			if(fieldValue !== matchingEl.value) {
-				this.errors[fieldName].push('Passwords do not match');
+				this.errors[fieldName].push('Lozinke se ne poklapaju');
 			}
 
 			if(this.errors[fieldName].length === 0) {
@@ -76,15 +75,11 @@ class Validator {
 		return true;
 	}
 
-	clearErrors(fieldName) {
-		let parentElement = document.querySelector(`${this.formID} input[name="${fieldName}"]`).parentElement;
-		let errorsElement = parentElement.querySelector('ul');
-		if (errorsElement) {
-			errorsElement.remove();
-		}
-	}
-
 	populateErrors(errors) {
+		for(const elem of document.querySelectorAll('ul')) {
+			elem.remove();
+		}
+
 		for(let key of Object.keys(errors)) {
 			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
 			let errorsElement = document.createElement('ul');
@@ -100,7 +95,10 @@ class Validator {
 	}
 
 	validateEmail(email) {
-		let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		return emailRegex.test(email);
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+			return true;
+		}
+
+		return false;
 	}
 }

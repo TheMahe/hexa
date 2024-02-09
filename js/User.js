@@ -114,7 +114,7 @@ class User {
       });
 
       if (!login_successful) {
-        alert("Pogresan email ili lozinka");
+        alert("Wrong email or password!");
       }
     } catch (error) {
       console.error("Error logging in:", error);
