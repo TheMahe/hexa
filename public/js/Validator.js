@@ -31,6 +31,11 @@ class Validator {
 		let fieldName = field.getAttribute('name');
 		let fieldValue = field.value;
 
+		if (!field) {
+			console.error("Error: Input element not found:", e.target);
+			return; // Handle the error gracefully, e.g., display a message
+		}
+
 		this.errors[fieldName] = [];
 
 		if(elFields[fieldName].required) {
@@ -52,15 +57,20 @@ class Validator {
 		if(elFields[fieldName].matching) {
 			let matchingEl = document.querySelector(`${this.formID} input[name="${elFields[fieldName].matching}"]`);
 
-			if(fieldValue !== matchingEl.value) {
+			// Add a check to ensure the matching element is found
+			if (matchingEl && fieldValue !== matchingEl.value) {
 				this.errors[fieldName].push('Lozinke se ne poklapaju');
+			} else if (!matchingEl) {
+				console.error(`Error: Matching element for ${fieldName} not found.`);
 			}
 
-			if(this.errors[fieldName].length === 0) {
-				this.errors[fieldName] = [];
+			// Reset errors if no issues are found
+			if (this.errors[fieldName].length === 0) {
 				this.errors[elFields[fieldName].matching] = [];
 			}
 		}
+
+
 
 		this.populateErrors(this.errors);
 	}
@@ -76,19 +86,21 @@ class Validator {
 	}
 
 	populateErrors(errors) {
-		for(const elem of document.querySelectorAll('ul')) {
-			elem.remove();
-		}
+		// More targeted approach for removing error messages
+		const form = document.querySelector(this.formID);
+		form.querySelectorAll('.validation-error').forEach(elem => elem.remove());
 
-		for(let key of Object.keys(errors)) {
-			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
+		for (let key of Object.keys(errors)) {
+			let inputElement = form.querySelector(`input[name="${key}"]`);
+			if (!inputElement) continue; // Skip if element not found
+			let parentElement = inputElement.parentElement;
 			let errorsElement = document.createElement('ul');
+			errorsElement.className = 'validation-error'; // Add a class for easy identification
 			parentElement.appendChild(errorsElement);
 
 			errors[key].forEach(error => {
 				let li = document.createElement('li');
 				li.innerText = error;
-
 				errorsElement.appendChild(li);
 			});
 		}
@@ -102,3 +114,5 @@ class Validator {
 		return false;
 	}
 }
+
+export default Validator;
