@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./assets/img/favicon.png">
+    <link rel="icon" href="assets/img/favicon.png">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
 
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
     <title>Hexa</title>
 </head>
 <body >
@@ -26,9 +34,9 @@
                   <li class="nav__item"><a href="./index.html" >Home</a></li>
                   <li class="nav__item"><a href="#about">About</a></li>
                   <li class="nav__item"><a href="https://mirzadelic.webflow.io/" >Portfolio</a></li>
-                  <li class="nav__item"><a href="./blog.html" >Blog</a></li>
-                  <li class="nav__item" ><a href="./signup.html">Sign up</a></li>
-                  <li class="nav__item"><a href="./login.html" >Log in</a></li>
+                  <li class="nav__item"><a href="blog.html" >Blog</a></li>
+                  <li class="nav__item" ><a href="signup.html">Sign up</a></li>
+                  <li class="nav__item"><a href="login.html" >Log in</a></li>
               </ul>
           </div>
           <div class="burger">
@@ -43,9 +51,9 @@
             <li ><a href="./index.html" >Home</a></li>
             <li ><a href="#">About</a></li>
             <li ><a href="#" >Portfolio</a></li>
-            <li ><a href="./blog.html" >Blog</a></li>
-            <li ><a href="./signup.html">Sign up</a></li>
-            <li><a href="./login.html" >Log in</a></li>
+            <li ><a href="blog.html" >Blog</a></li>
+            <li ><a href="signup.html">Sign up</a></li>
+            <li><a href="login.html" >Log in</a></li>
         </ul>
     </div>
   </header>
@@ -68,8 +76,8 @@
         </div>
 
         <div class="hero-btn">
-            <a class="hero-btn-left" href="#">Sign up</a>
-            <a class="hero-btn-right" href="#">Log in</a>
+            <a class="hero-btn-left" href="signup.html">Sign up</a>
+            <a class="hero-btn-right" href="login.html">Log in</a>
         </div>
     </div>
 </div>
@@ -121,7 +129,7 @@
                     <h1>From Novice to Developer: Charting Your Path in Tech</h1>
                     <p>Embark on a coding journey - discover the roadmap to developing your skills from beginner to pro.</p>
                 </div>
-                    <a href="./blog1.html">See more</a>
+                    <a href="blog1.html">See more</a>
                 </div>
     
                 <div class="card">
@@ -129,7 +137,7 @@
                     <h1>Three.js: Bringing Dimensions to the Web</h1>
                     <p>Explore how Three.js can transform your 2D screens into 3D worlds with engaging and interactive visualizations.</p>
                 </div>
-                    <a href="./blog2.html">See more</a>
+                    <a href="blog2.html">See more</a>
                 </div>
     
           
@@ -140,7 +148,7 @@
                         <h1>Mastering JavaScript: The Language of the Web</h1>
                         <p>Unlock the potential of JavaScript to create dynamic and responsive web applications.</p>
                         </div>  
-                        <a href="./blog4.html">See more</a>
+                        <a href="blog4.html">See more</a>
                     </div>
     
                     <div class="card">
@@ -148,7 +156,7 @@
                         <h1>Modern JavaScript: Frameworks and Beyond</h1>
                         <p>Dive into the ecosystem of modern JavaScript frameworks and tools that are shaping the future of web development.</p>
                     </div>
-                        <a href="./blog4.html">See more</a>
+                        <a href="blog4.html">See more</a>
                     </div>
                 </div>
             </div>
@@ -162,7 +170,7 @@
       </div>
       <div class="row2">
           <div class="logo">
-              <img src="./assets/img/logo.png" alt="">
+              <img src="assets/img/logo.png" alt="">
           </div>
           <div class="social">
                   <div class="home">
@@ -281,12 +289,15 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    
 
-    <script src="./js/Validator.js"></script>
-    <script src="./js/animations.js"></script>
-    <script src="./js/Session.js"></script>
-    <script src="./js/User.js"></script>
-    <script src="./js/app.js"></script>
+
+
+    <script type="module" src="js/firebaseConfig.js"></script>
+
+    <script type="module" src="js/Validator.js"></script>
+    <script  type="module" src="js/animations.js"></script>
+    <script type="module" src="js/Session.js"></script>
+    <script type="module" src="js/User.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

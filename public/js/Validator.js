@@ -31,37 +31,46 @@ class Validator {
 		let fieldName = field.getAttribute('name');
 		let fieldValue = field.value;
 
+		if (!field) {
+			console.error("Error: Input element not found:", e.target);
+			return; // Handle the error gracefully, e.g., display a message
+		}
+
 		this.errors[fieldName] = [];
-		this.clearErrors(fieldName);
 
 		if(elFields[fieldName].required) {
 			if(fieldValue === '') {
-				this.errors[fieldName].push('Field is empty');
+				this.errors[fieldName].push('Polje je prazno');
 			}
 		}
 
 		if(elFields[fieldName].email) {
 			if(!this.validateEmail(fieldValue)) {
-				this.errors[fieldName].push('Invalid email address');
+				this.errors[fieldName].push('Neispravna email adresa');
 			}
 		}
 
 		if(fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
-			this.errors[fieldName].push(`Field must have a minimum of ${elFields[fieldName].minlength} and a maximum of ${elFields[fieldName].maxlength} characters`);
+			this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`);
 		}
 
 		if(elFields[fieldName].matching) {
 			let matchingEl = document.querySelector(`${this.formID} input[name="${elFields[fieldName].matching}"]`);
 
-			if(fieldValue !== matchingEl.value) {
-				this.errors[fieldName].push('Passwords do not match');
+			// Add a check to ensure the matching element is found
+			if (matchingEl && fieldValue !== matchingEl.value) {
+				this.errors[fieldName].push('Lozinke se ne poklapaju');
+			} else if (!matchingEl) {
+				console.error(`Error: Matching element for ${fieldName} not found.`);
 			}
 
-			if(this.errors[fieldName].length === 0) {
-				this.errors[fieldName] = [];
+			// Reset errors if no issues are found
+			if (this.errors[fieldName].length === 0) {
 				this.errors[elFields[fieldName].matching] = [];
 			}
 		}
+
+
 
 		this.populateErrors(this.errors);
 	}
@@ -76,31 +85,34 @@ class Validator {
 		return true;
 	}
 
-	clearErrors(fieldName) {
-		let parentElement = document.querySelector(`${this.formID} input[name="${fieldName}"]`).parentElement;
-		let errorsElement = parentElement.querySelector('ul');
-		if (errorsElement) {
-			errorsElement.remove();
-		}
-	}
-
 	populateErrors(errors) {
-		for(let key of Object.keys(errors)) {
-			let parentElement = document.querySelector(`${this.formID} input[name="${key}"]`).parentElement;
+		// More targeted approach for removing error messages
+		const form = document.querySelector(this.formID);
+		form.querySelectorAll('.validation-error').forEach(elem => elem.remove());
+
+		for (let key of Object.keys(errors)) {
+			let inputElement = form.querySelector(`input[name="${key}"]`);
+			if (!inputElement) continue; // Skip if element not found
+			let parentElement = inputElement.parentElement;
 			let errorsElement = document.createElement('ul');
+			errorsElement.className = 'validation-error'; // Add a class for easy identification
 			parentElement.appendChild(errorsElement);
 
 			errors[key].forEach(error => {
 				let li = document.createElement('li');
 				li.innerText = error;
-
 				errorsElement.appendChild(li);
 			});
 		}
 	}
 
 	validateEmail(email) {
-		let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		return emailRegex.test(email);
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+			return true;
+		}
+
+		return false;
 	}
 }
+
+export default Validator;
