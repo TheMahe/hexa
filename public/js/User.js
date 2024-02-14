@@ -1,5 +1,7 @@
 import { auth, db } from './firebaseConfig';
-
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { setDoc } from 'firebase/firestore';
 class User {
   constructor() {
     this.user_id = "";
@@ -11,10 +13,11 @@ class User {
 
   async create() {
     try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(this.email, this.password);
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
       const user = userCredential.user;
       this.user_id = user.uid;
-      await firebase.firestore().collection('users').doc(this.user_id).set({
+      await setDoc(doc(getFirestore(), 'users', this.user_id), {
         username: this.username,
         email: this.email,
         profileImageUrl: this.profileImageUrl
@@ -25,7 +28,6 @@ class User {
       throw error;
     }
   }
-
   async getAll() {
     try {
       const snapshot = await firebase.firestore().collection('users').get();
